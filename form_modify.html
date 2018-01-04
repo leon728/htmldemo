@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="ms_util.js"></script>
+
+	<script>
+		var f1_orig;
+
+		var initJsF1 = {t1:"gogo1", t2:"gogo2", en_dis:1, chk_yesno:"no", sel1:"op2"};
+
+		// 網頁載入之後執行初始化
+		$(function(){
+			$("#f1").render(initJsF1);
+
+			// 紀錄原始資料
+			f1_orig = $("#f1").serialize();
+
+			// 每200ms檢查表單內容跟原始資料是否相同
+			setInterval(function(){
+				check_formModify($("#f1"), f1_orig, $("#f1 :submit").eq(0));
+			}, 200);
+		});
+
+		// 比對jform的資料和原始資料orig_data，根據情況開關jApply按鈕
+		function check_formModify(jform, orig_data, japply) {
+			japply.prop("disabled", (jform.serialize() == orig_data));
+		}
+	</script>
+
+</head>
+<body>
+	
+<form action="" name="f1" id="f1">
+	<input type="text" name="t1" value="t1"> <br>
+	<input type="text" name="t2" value="t2"> <br>
+
+	<input type="checkbox" name="en_dis" checked> enable/disable <br>
+
+	<input type="radio" name="chk_yesno" value="yes"> yes <br>
+	<input type="radio" name="chk_yesno" value="no" checked> no <br>
+
+	<select name="sel1" id="sel1">
+		<option value="op1">v1</option>
+		<option value="op2" selected>v2</option>
+		<option value="op3">v3</option>
+	</select>
+	<br>
+
+	<hr>
+
+	<input type="submit" value="Apply" disabled>
+	<input type="button" value="Cancel" onclick="$('#f1').render(initJsF1);">
+</form>
+
+</body>
+</html>
