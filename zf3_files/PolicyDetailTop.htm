@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ï»¿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!-- saved from url=(0064)https://www.transglobe.com.tw/CSIS/PolicyInq/PolicyDetailTop.jsp -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
 
@@ -45,32 +45,32 @@
 var iInterval = "";
 var strVendor = ""; //'M':Microsoft,'N':Netscape
 /**
-¨ç¼Æ¦WºÙ:	ShowButton(strFunctionKey)
-¨ç¼Æ¥\¯à:	Åã¥Ü¥\¯àÁä
-¶Ç¤J°Ñ¼Æ:	strFunctionKey:¥\¯àÁä¦r¦ê
-			A:·s¼W
-			U:­×§ï
-			D:§R°£
-			I:¬d¸ß
-			E:Â÷¶}
-			R:²M°£
-			P:¦C¦L
-			B:·s¼W©ú²Ó
-			C:­×§ï©ú²Ó
-			F:§R°£©ú²Ó
-			G:¬d¸ß©ú²Ó
-			H:½T©w
-			J:¤W¤@­¶
-			K:¤U¤@­¶
-			S:Àx¦s
-			L:³øªíReport
-			V:­«·s¬d¸ß
-			X:¥t¦s·sÀÉ
-			Y:³Ì«e­¶				
-			Z:³Ì²×­¶
+å‡½æ•¸åç¨±:	ShowButton(strFunctionKey)
+å‡½æ•¸åŠŸèƒ½:	é¡¯ç¤ºåŠŸèƒ½éµ
+å‚³å…¥åƒæ•¸:	strFunctionKey:åŠŸèƒ½éµå­—ä¸²
+			A:æ–°å¢
+			U:ä¿®æ”¹
+			D:åˆªé™¤
+			I:æŸ¥è©¢
+			E:é›¢é–‹
+			R:æ¸…é™¤
+			P:åˆ—å°
+			B:æ–°å¢æ˜ç´°
+			C:ä¿®æ”¹æ˜ç´°
+			F:åˆªé™¤æ˜ç´°
+			G:æŸ¥è©¢æ˜ç´°
+			H:ç¢ºå®š
+			J:ä¸Šä¸€é 
+			K:ä¸‹ä¸€é 
+			S:å„²å­˜
+			L:å ±è¡¨Report
+			V:é‡æ–°æŸ¥è©¢
+			X:å¦å­˜æ–°æª”
+			Y:æœ€å‰é 				
+			Z:æœ€çµ‚é 
 				
-¶Ç¦^­È:	µL
-­×§ï¬ö¿ı:	­×§ï¤é´Á	­×§ïªÌ	­×   §ï   ºK   ­n
+å‚³å›å€¼:	ç„¡
+ä¿®æ”¹ç´€éŒ„:	ä¿®æ”¹æ—¥æœŸ	ä¿®æ”¹è€…	ä¿®   æ”¹   æ‘˜   è¦
 		---------	----------	-----------------------------------------
 */
 function ShowButton(strFunctionKey)
@@ -93,7 +93,7 @@ function ShowButton(strFunctionKey)
 		}
 		for(i=0;i<strFunctionKey.length;i++)
 		{
-			if( strFunctionKey.substr(i,1) == 'A' )	//·s¼W
+			if( strFunctionKey.substr(i,1) == 'A' )	//æ–°å¢
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnAdd" onclick="OnClickBtn(this.id)" name="btnAdd" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Add.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -103,7 +103,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnAdd');
 					elmElement.setAttribute('name','btnAdd');
 					elmElement.setAttribute('type','button');
-//					elmElement.setAttribute('value','·s  ¼W');
+//					elmElement.setAttribute('value','æ–°  å¢');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;BACKGROUND-IMAGE: url(../images/Botton/Add.gif); WIDTH: 65px; HEIGHT: 30px');
@@ -111,7 +111,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'U' )	//­×§ï
+			else if( strFunctionKey.substr(i,1) == 'U' )	//ä¿®æ”¹
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnUpdate" onclick="OnClickBtn(this.id)" name="btnUpdate" class="eServiceButton"  style="BACKGROUND-IMAGE: url(../images/Botton/Update.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -121,7 +121,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnUpdate');
 					elmElement.setAttribute('name','btnUpdate');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','­×  §ï');
+					elmElement.setAttribute('value','ä¿®  æ”¹');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -129,7 +129,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'D' )	//§R°£
+			else if( strFunctionKey.substr(i,1) == 'D' )	//åˆªé™¤
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnDelete" onclick="OnClickBtn(this.id)" name="btnDelete" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Delete.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -139,7 +139,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnDelete');
 					elmElement.setAttribute('name','btnDelete');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','§R  °£');
+					elmElement.setAttribute('value','åˆª  é™¤');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -147,7 +147,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'X' )	//¥t¦s·sÀÉ
+			else if( strFunctionKey.substr(i,1) == 'X' )	//å¦å­˜æ–°æª”
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnSaveAs"  onclick="OnClickBtn(this.id)" name="btnDelete" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/SaveAs.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -157,7 +157,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnSaveAs');
 					elmElement.setAttribute('name','btnSaveAs');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¥t¦s·sÀÉ');
+					elmElement.setAttribute('value','å¦å­˜æ–°æª”');
 			eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -165,7 +165,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'Y' )	//³Ì«e­¶
+			else if( strFunctionKey.substr(i,1) == 'Y' )	//æœ€å‰é 
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnFirst" onclick="OnClickBtn(this.id)" name="btnDelete" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/First.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -175,7 +175,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnFirst');
 					elmElement.setAttribute('name','btnFirst');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','³Ì«e­¶');
+					elmElement.setAttribute('value','æœ€å‰é ');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -183,7 +183,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'Z' )	//³Ì²×­¶
+			else if( strFunctionKey.substr(i,1) == 'Z' )	//æœ€çµ‚é 
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnLast"  onclick="OnClickBtn(this.id)" name="btnDelete" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Last.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -193,7 +193,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnLast');
 					elmElement.setAttribute('name','btnLast');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','³Ì²×­¶');
+					elmElement.setAttribute('value','æœ€çµ‚é ');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -201,7 +201,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'I' )	//¬d¸ß
+			else if( strFunctionKey.substr(i,1) == 'I' )	//æŸ¥è©¢
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnInquiry" onclick="OnClickBtn(this.id)" name="btnInquiry" class="eServiceButton"  style="BACKGROUND-IMAGE: url(../images/Botton/Inquiry.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -211,7 +211,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnInquiry');
 					elmElement.setAttribute('name','btnInquiry');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¬d  ¸ß');
+					elmElement.setAttribute('value','æŸ¥  è©¢');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -219,7 +219,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'E' )	//Â÷¶}
+			else if( strFunctionKey.substr(i,1) == 'E' )	//é›¢é–‹
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnExit"  onclick="OnClickBtn(this.id)" name="btnExit" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Exit.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -229,7 +229,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnExit');
 					elmElement.setAttribute('name','btnExit');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','Â÷  ¶}');
+					elmElement.setAttribute('value','é›¢  é–‹');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -237,7 +237,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'R' )	//²M°£
+			else if( strFunctionKey.substr(i,1) == 'R' )	//æ¸…é™¤
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnReset" oclick="OnClickBtn(this.id)" name="btnReset" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Reset.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -247,7 +247,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnReset');
 					elmElement.setAttribute('name','btnReset');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','²M  °£');
+					elmElement.setAttribute('value','æ¸…  é™¤');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -255,7 +255,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'P' )	//¦C¦L
+			else if( strFunctionKey.substr(i,1) == 'P' )	//åˆ—å°
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnPrint" onclick="OnClickBtn(this.id)" name="btnPrint" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Print.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -265,7 +265,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnPrint');
 					elmElement.setAttribute('name','btnPrint');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¦C  ¦L');
+					elmElement.setAttribute('value','åˆ—  å°');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -273,7 +273,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'B' )	//·s¼W©ú²Ó
+			else if( strFunctionKey.substr(i,1) == 'B' )	//æ–°å¢æ˜ç´°
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnAddDetail"  onclick="OnClickBtn(this.id)" name="btnAddDetail" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/AddDetail.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -283,7 +283,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnAddDetail');
 					elmElement.setAttribute('name','btnAddDetail');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','·s¼W©ú²Ó');
+					elmElement.setAttribute('value','æ–°å¢æ˜ç´°');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -291,7 +291,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'C' )	//­×§ï©ú²Ó
+			else if( strFunctionKey.substr(i,1) == 'C' )	//ä¿®æ”¹æ˜ç´°
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnUpdateDetail" onclick="OnClickBtn(this.id)" name="btnUpdateDetail" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/UpdateDetail.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -301,7 +301,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnUpdateDetail');
 					elmElement.setAttribute('name','btnUpdateDetail');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','­×§ï©ú²Ó');
+					elmElement.setAttribute('value','ä¿®æ”¹æ˜ç´°');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -309,7 +309,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'F' )	//§R°£©ú²Ó
+			else if( strFunctionKey.substr(i,1) == 'F' )	//åˆªé™¤æ˜ç´°
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnDeleteDetail" onclick="OnClickBtn(this.id)" name="btnDeleteDetail" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/DeleteDetail.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -319,7 +319,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnDeleteDetail');
 					elmElement.setAttribute('name','btnDeleteDetail');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','§R°£©ú²Ó');
+					elmElement.setAttribute('value','åˆªé™¤æ˜ç´°');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -327,7 +327,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'G' )	//¬d¸ß©ú²Ó
+			else if( strFunctionKey.substr(i,1) == 'G' )	//æŸ¥è©¢æ˜ç´°
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnInquiryDetail"  onclick="OnClickBtn(this.id)" name="btnInquiryDetail" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/InquiryDetail.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -337,7 +337,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnInquiryDetail');
 					elmElement.setAttribute('name','btnInquiryDetail');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¬d¸ß©ú²Ó');
+					elmElement.setAttribute('value','æŸ¥è©¢æ˜ç´°');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -345,7 +345,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'H' )	//½T©w
+			else if( strFunctionKey.substr(i,1) == 'H' )	//ç¢ºå®š
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnOk"  onclick="OnClickBtn(this.id)" name="btnOk" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Ok.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -355,7 +355,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnOk');
 					elmElement.setAttribute('name','btnOk');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','½T  ©w');
+					elmElement.setAttribute('value','ç¢º  å®š');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -363,7 +363,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'J' )	//¤W¤@­¶
+			else if( strFunctionKey.substr(i,1) == 'J' )	//ä¸Šä¸€é 
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnPrevPage"  onclick="OnClickBtn(this.id)" name="btnPrevPage" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/PreviousPage.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -373,7 +373,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnPrevPage');
 					elmElement.setAttribute('name','btnPrevPage');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¤W¤@­¶');
+					elmElement.setAttribute('value','ä¸Šä¸€é ');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -381,7 +381,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'K' )	//¤U¤@­¶
+			else if( strFunctionKey.substr(i,1) == 'K' )	//ä¸‹ä¸€é 
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnNextPage"   onclick="OnClickBtn(this.id)" name="btnNextPage" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/NextPage.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -391,7 +391,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnNextPage');
 					elmElement.setAttribute('name','btnNextPage');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','¤U¤@­¶');
+					elmElement.setAttribute('value','ä¸‹ä¸€é ');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -399,7 +399,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'V' )	// ­«·s¬d¸ß
+			else if( strFunctionKey.substr(i,1) == 'V' )	// é‡æ–°æŸ¥è©¢
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnReQuery"  onclick="OnClickBtn(this.id)" name="btnReQuery" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/AReQuiry.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -409,7 +409,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnReQuery');
 					elmElement.setAttribute('name','btnReQuery');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','­«·s¬d¸ß');
+					elmElement.setAttribute('value','é‡æ–°æŸ¥è©¢');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -417,7 +417,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'S' )	//Àx¦s
+			else if( strFunctionKey.substr(i,1) == 'S' )	//å„²å­˜
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnSave"  onclick="OnClickBtn(this.id)" name="btnSave" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Save.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -427,7 +427,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnSave');
 					elmElement.setAttribute('name','btnSave');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','Àx  ¦s');
+					elmElement.setAttribute('value','å„²  å­˜');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -435,7 +435,7 @@ function ShowButton(strFunctionKey)
 					oForm.appendChild(elmElement);
 				}
 			}
-			else if( strFunctionKey.substr(i,1) == 'L' )	//³øªíReport
+			else if( strFunctionKey.substr(i,1) == 'L' )	//å ±è¡¨Report
 			{
 				if( strVendor == 'M' )
 					document.all("frmMain").insertAdjacentHTML('BeforeEnd','<INPUT type="button" id="btnReport" onclick="OnClickBtn(this.id)" name="btnReport" class="eServiceButton" style="BACKGROUND-IMAGE: url(../images/Botton/Report.gif); WIDTH: 65px; HEIGHT: 30px">');
@@ -445,7 +445,7 @@ function ShowButton(strFunctionKey)
 					elmElement.setAttribute('id','btnReport');
 					elmElement.setAttribute('name','btnReport');
 					elmElement.setAttribute('type','button');
-					elmElement.setAttribute('value','³ø  ªí');
+					elmElement.setAttribute('value','å ±  è¡¨');
 					eventAdder(elmElement,"onclick","OnClickBtn(this.id)");
 					elmElement.setAttribute('class','eServiceButton');
 					elmElement.setAttribute('style','padding-top : 0px;padding-left : 0px;padding-right : 0px;padding-bottom : 0px;margin-top : 0px;margin-left : 0px;margin-right : 0px;margin-bottom : 0px;height:20;');
@@ -458,28 +458,28 @@ function ShowButton(strFunctionKey)
 }
 
 /**
-¨ç¼Æ¦WºÙ: OnClickBtn(strId)
-¨ç¼Æ¥\¯à: ¦U«ö¶sonClick®É°õ¦æ¥»¨ç¼Æ,¦A±N«ö¶s­È¶Ç¦Ücontent frame
-		  ¶Ç¦Ücontent frame¦U¦r¥À¤§²[¸q¬°:
-			A:·s¼W
-			U:­×§ï
-			D:§R°£
-			I:¬d¸ß
-			E:Â÷¶}
-			R:²M°£
-			P:¦C¦L
-			B:·s¼W©ú²Ó
-			C:­×§ï©ú²Ó
-			F:§R°£©ú²Ó
-			G:¬d¸ß©ú²Ó
-			H:½T©w
-			J:¤W¤@­¶
-			K:¤U¤@­¶
-			S:Àx¦s
-			L:³øªíReport
-¶Ç¤J°Ñ¼Æ: strId:¥\¯àÁä¤§Id
-¶Ç¦^­È:	µL
-­×§ï¬ö¿ı:	­×§ï¤é´Á	­×§ïªÌ	­×   §ï   ºK   ­n
+å‡½æ•¸åç¨±: OnClickBtn(strId)
+å‡½æ•¸åŠŸèƒ½: å„æŒ‰éˆ•onClickæ™‚åŸ·è¡Œæœ¬å‡½æ•¸,å†å°‡æŒ‰éˆ•å€¼å‚³è‡³content frame
+		  å‚³è‡³content frameå„å­—æ¯ä¹‹æ¶µç¾©ç‚º:
+			A:æ–°å¢
+			U:ä¿®æ”¹
+			D:åˆªé™¤
+			I:æŸ¥è©¢
+			E:é›¢é–‹
+			R:æ¸…é™¤
+			P:åˆ—å°
+			B:æ–°å¢æ˜ç´°
+			C:ä¿®æ”¹æ˜ç´°
+			F:åˆªé™¤æ˜ç´°
+			G:æŸ¥è©¢æ˜ç´°
+			H:ç¢ºå®š
+			J:ä¸Šä¸€é 
+			K:ä¸‹ä¸€é 
+			S:å„²å­˜
+			L:å ±è¡¨Report
+å‚³å…¥åƒæ•¸: strId:åŠŸèƒ½éµä¹‹Id
+å‚³å›å€¼:	ç„¡
+ä¿®æ”¹ç´€éŒ„:	ä¿®æ”¹æ—¥æœŸ	ä¿®æ”¹è€…	ä¿®   æ”¹   æ‘˜   è¦
 		---------	----------	-----------------------------------------
 */
 function OnClickBtn(strId)
@@ -500,7 +500,7 @@ function OnClickBtn(strId)
 				{
 					var strCommand = 'ToolBarOnClick("A")';
 					winTarget.iInterval = winTarget.setInterval(strCommand,100);
-					strAction = "·s¼W";
+					strAction = "æ–°å¢";
 				} 
 				else if( strId == "btnUpdate" )
 				{
@@ -604,11 +604,11 @@ function OnClickBtn(strId)
 }
 
 /**
-¨ç¼Æ¦WºÙ:	BodyOnload()
-¨ç¼Æ¥\¯à:	ÁôÂÃ¥\¯àÁä
-¶Ç¤J°Ñ¼Æ:	µL
-¶Ç¦^­È:	µL
-­×§ï¬ö¿ı:	­×§ï¤é´Á	­×§ïªÌ	­×   §ï   ºK   ­n
+å‡½æ•¸åç¨±:	BodyOnload()
+å‡½æ•¸åŠŸèƒ½:	éš±è—åŠŸèƒ½éµ
+å‚³å…¥åƒæ•¸:	ç„¡
+å‚³å›å€¼:	ç„¡
+ä¿®æ”¹ç´€éŒ„:	ä¿®æ”¹æ—¥æœŸ	ä¿®æ”¹è€…	ä¿®   æ”¹   æ‘˜   è¦
 		---------	----------	-----------------------------------------
 */
 function BodyOnLoad()
@@ -619,9 +619,9 @@ function BodyOnLoad()
 		strVendor = 'N';
 	else
 	{
-		alert( '½Ğ¨Ï¥Î Microsoft ©Î Netscape ¤§ÂsÄı¾¹' );
+		alert( 'è«‹ä½¿ç”¨ Microsoft æˆ– Netscape ä¹‹ç€è¦½å™¨' );
 	}
-	//¦]¬° Windows XP µLªkÅã¥Ü¥¿½Tªº¹Ï®×,¼È®É¥ı§ï¬°¤å¦rÅã¥Ü
+	//å› ç‚º Windows XP ç„¡æ³•é¡¯ç¤ºæ­£ç¢ºçš„åœ–æ¡ˆ,æš«æ™‚å…ˆæ”¹ç‚ºæ–‡å­—é¡¯ç¤º
 	strVendor = 'N';
 }
 
@@ -643,4 +643,4 @@ function eventAdder(objAttrib,handler,addFunction) {
 	</p><form id="frmMain" name="frmMain" style="PADDING-RIGHT: 0px; BACKGROUND-POSITION: 0px 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; offset-top: 0px">
 	</form>
 
-<div id="topcontrol" title="²¾¨ì³Ì¤W­±" style="position: fixed; bottom: 15px; right: 35px; opacity: 0; cursor: pointer;"><img src="PolicyDetailTop_data/up_002.png" style="width:41px; height:18px"></div><div id="topcontrol" style="position: fixed; bottom: 15px; right: 35px; opacity: 0; cursor: pointer;" title="²¾¨ì³Ì¤W­±"><img src="PolicyDetailTop_data/up.png" style="width:41px; height:18px"></div></body></html>
+<div id="topcontrol" title="ç§»åˆ°æœ€ä¸Šé¢" style="position: fixed; bottom: 15px; right: 35px; opacity: 0; cursor: pointer;"><img src="PolicyDetailTop_data/up_002.png" style="width:41px; height:18px"></div><div id="topcontrol" style="position: fixed; bottom: 15px; right: 35px; opacity: 0; cursor: pointer;" title="ç§»åˆ°æœ€ä¸Šé¢"><img src="PolicyDetailTop_data/up.png" style="width:41px; height:18px"></div></body></html>
