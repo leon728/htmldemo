@@ -1,6 +1,0 @@
-﻿(function(d){
-	d.extend(true, d.user, dynaSetting.gws.user);
-	d.extend(true, d.user, {
-		// User Default Setting
-	});
-})(dynaGWS);

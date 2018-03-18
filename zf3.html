@@ -1,12 +1,143 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>資料查詢</title>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
 
-<style></style><link rel="stylesheet" type="text/css" href="chrome-extension://jknhnffcaenjjlneglfcihapfklmefob/styles/search.css"></head>
-<frameset framespacing="0" frameborder="0" border="0" marginwidth="0" marginheight="0" rows="60,*">
-	<frame name="top" src="zf3_files/PolicyDetailTop.htm" noresize="noresize" scrolling="auto" marginwidth="0" marginheight="0" border="0">
-	<frame name="bottom" src="zf3_files/FundDetail.htm" noresize="noresize" scrolling="auto" marginwidth="0" marginheight="0" border="0">
-	<noframes>&lt;body&gt;&lt;P&gt;若要檢視此頁面，您需要一個支援框架的瀏覽器。&lt;/P&gt;&lt;/body&gt;</noframes>
-</frameset>
+<title>query</title>
 
-</html>
+</head>
+<body marginwidth="0" marginheight="0">
+
+<div style="width: 100%;" align="center">
+
+	<span class="titleStyle">query</span>
+
+
+	<p>	
+									
+			</p><div class="noteMsgNormal" style="font-size:16px; font-weight:bold; background-color:#E8F2FE; margin-bottom:6px;">
+				<div style="margin-bottom:3px;">您的投資風險屬性定位：</div>
+																					
+			</div>
+			<!--  <div style='font-size:18px;margin-bottom:10px;text-decoration:underline; text-weight:bold;color:#0070BD;'>風險屬性：</div> -->								
+	 
+	<div class="noteMsgNormal">
+		<b>保單投資概況:</b>(本表主要是提供保戶瞭解本保單之綜合投資績效概況)	
+	</div>
+ 	
+	
+	<table class="dataTable" border="1">
+		<thead class="queryHead">
+			<tr align="center">
+				
+					
+					
+					
+						<td class="dataHeader">&nbsp;</td>
+						<td class="dataHeader">參考保險費<br>(A)</td>
+						<td class="dataHeader">彈性保險費<br>(B)</td>
+						<td class="dataHeader">前置費用<br>(C)</td>
+						<td class="dataHeader">保險成本<br>(D)</td>
+						<td class="dataHeader">保單維護/管理費<br>(E)</td>
+						<td class="dataHeader">申購手續費<br>(F)</td>
+						<td class="dataHeader">轉換費用<br>(G)</td>
+						<td class="dataHeader">變現價差<br>(H)</td>
+						<td class="dataHeader">後置費用<br>(I)</td>
+						<td class="dataHeader">部份提領淨額<br>(J)</td>
+						<td class="dataHeader">保單投資成本<br>(K)</td>
+						<td class="dataHeader">保單投資損益<br>(L)</td>
+					
+					
+					
+					
+				
+			</tr>
+		</thead>
+		<tbody class="queryBody">
+			<tr align="right">
+			
+				<td class="dataField" align="left">累計交易金額</td>
+				
+				
+					
+					
+					
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+					
+					
+					
+					
+				
+				
+				<td class="dataField">0</td>
+				<td class="dataField">0</td>
+				<td class="dataField">0</td>
+				<td class="dataField">0</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- R10373 BRD5-1 第一項（修正首期淨保險費延投利息，保單帳戶價值，保單累計投資報酬率）和第二項（修正計算說明）的呈現方式   update by John(shiyang)-->
+	<div class="noteMsgNormal" style="margin-top: 10px;">
+		
+			
+			
+			
+			<table class="dataTable" border="1">
+				<thead class="queryHead">
+				<tr align="center">
+					<td class="dataField" rowspan="2">首期淨保險費延投利息<br>( 依條款約定產生之利息 )<br>(M)</td>
+					<td class="dataField" rowspan="2">保單帳戶價值 <br>(N)</td>
+					<td class="dataField" rowspan="2">保單累計投資報酬率 <br>(O)<!-- =(L)/(K)*% --></td>
+					<td class="dataField">停利投報率</td>
+					<td class="dataField">停利通知日期</td>					
+				</tr>
+				<tr align="center">
+					<td class="dataField">停損投報率</td>
+					<td class="dataField">停損通知日期</td>
+				</tr>
+				</thead>
+				<tbody class="queryBody">
+				<tr align="center">
+				
+					<td class="dataField" rowspan="2">NT$ 0 </td>
+					<td class="dataField" rowspan="2">NT$ 0 </td>
+					<td class="dataField" rowspan="2">0 %</td>
+					<td class="dataField">尚未設定</td>
+					<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="center">
+				
+					<td class="dataField">尚未設定</td>
+					<td class="dataField">&nbsp;</td>
+				</tr>
+				</tbody>
+			</table>
+			    <br>
+				計算說明：保單投資成本(K)=(A)+(B)+(M)-(C)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保單投資損益(L)=(D)+(E)+(F)+(G)+(H)+(I)+(J)+(N)-(K)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保單累計投資報酬率(O)=[(L)÷(K)]×100%
+			
+			
+		
+		
+		<!-- R10373 BRD5-1 第三項 身故保險金額 將移至 保單資料查詢 頁面顯示，故刪除此欄位  del by John(shiyang) -->
+		
+		
+	</div>
+	
+	<br>
+	
+	<div class="noteMsgNormal">
+
+		
+	</div>
+
+</div>
+
+</body></html>

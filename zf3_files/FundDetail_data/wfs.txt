@@ -1,1 +1,0 @@
-WFS.StateTable["wfs.wcmp.json.loadstate"] = true;
