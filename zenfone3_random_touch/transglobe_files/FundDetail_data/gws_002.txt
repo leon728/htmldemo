@@ -1,0 +1,149 @@
+/*!
+
+### API Documentation
++ **load**
+ + **path** file path, require.js path when no value(example: http://url.com.tw)
+ + **browser** download when browser(option: IE6-11)
+ + **where** script insert where(option: head, body)
+ + **cache** if true, this js don't use cache
+ + **filename** filename
+
+****************************************************************************************************/
+dynaRequire.Load([
+	{
+		filename: 'gws.compatibility.js',
+		path: 'lib/js/'
+	},
+	{
+		name: 'extend',
+		filename: 'gws.extend.js',
+		path: 'lib/js/'
+	},
+	{
+		name: 'gws',
+		filename: 'gws.gws.js',
+		path: 'lib/js/',
+		before: 'dynaGWS'
+	},
+	{
+		filename: 'gws.font.js',
+		path: 'lib/js/'
+	},
+	{
+		name: 'wfa',
+		filename: 'gws.wfa.js',
+		path: 'lib/js/',
+		Callback: function(){
+			dynaRequire.Load([
+				{
+					filename: 'trigger.html',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["dcw-trigger"]'
+				}
+			]);
+		}
+	},
+	{
+		name: 'wime',
+		filename: 'gws.wime.js',
+		path: 'lib/js/',
+		level: 2,
+		after: 'dynaGWS.user.keyboard["enable"]',
+		Callback: function(){
+			dynaRequire.Load([
+				{
+					filename: 'candidate.html',
+					level: 2,
+					path: 'lib/template/',
+					after: 'dynaGWS.html["dcw-candidate"]'
+				},
+				{
+					filename: 'wime.html',
+					level: 2,
+					path: 'lib/template/',
+					after: 'dynaGWS.html["dcw-wime"]'
+				},
+				{
+					filename: 'keyboard-kamei.html',
+					level: 2,
+					lang: 'JPN',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["kamei"]'
+				},
+				{
+					filename: 'keyboard-kana.html',
+					level: 2,
+					lang: 'JPN',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["kana"]'
+				},
+				{
+					filename: 'keyboard-jis.html',
+					level: 2,
+					lang: 'JPN',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["jis"]'
+				},
+				{
+					filename: 'keyboard-changjie.html',
+					level: 2,
+					lang: 'CHT',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["changjie"]'
+				},
+				{
+					filename: 'keyboard-phonetic.html',
+					level: 2,
+					lang: 'CHT',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["phonetic"]'
+				}
+			]);
+		}
+	},
+	{
+		name: 'ppwime',
+		filename: 'gws.ppwime.js',
+		level: 3,
+		path: 'lib/js/',
+		lang: 'JPN',
+		after: 'dynaGWS.ppwime',
+		Callback: function(){
+			dynaRequire.Load([
+				{
+					filename: 'ppwime.html',
+					level: 3,
+					lang: 'JPN',
+					path: 'lib/template/',
+					after: 'dynaGWS.html["dcw-ppwime"]'
+				}
+			]);
+		}
+	},
+	{
+		name: 'unicode',
+		filename: 'wfs.wcmp.json.js',
+		lang: 'CHT',
+		after: 'WFS.StateTable["wfs.wcmp.json.loadstate"]',
+		path: 'js/lib/'
+	},
+	{
+		name: 'uao',
+		filename: 'gws.ffbig5.js',
+		browser: 'FIREFOX',
+		after: 'dynaGWS.mapping.uao',
+		lang: 'CHT',
+		path: 'lib/js/'
+	},
+	{
+		filename: 'gws.config.js',
+		path: 'lib/js/',
+		after: dynaRequire.isFinish,
+		Callback: function(){
+			if(typeof(dynaRequire.Setting) !== 'undefined'){
+				dynaRequire.Setting();
+			}
+			dynaGWS.CreateEvent(window, 'load', dynaGWS.Initialize());
+		}
+	}
+]);

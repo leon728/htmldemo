@@ -1,0 +1,17 @@
+(function(d){
+	d.extend(true,d.user,{
+		font:{
+			1:{
+				fontFN:'MingLiu.tte',
+				fontface:'MingLiu',	
+				range:{
+					'0xE000':'0xFEFF',
+					'4byte':[
+						{'0xD800':'0xDBFF'},
+						{'0xDC00':'0xDFFF'}
+					]
+				}
+			} 
+		}
+	});
+})(dynaGWS);

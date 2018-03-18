@@ -1,0 +1,1624 @@
+/**
+ * Title:  Browser's WindowForm Validation with related functions
+ * Description:         Form Validation
+ * Copyright:           Copyright (c) 2001
+ * Company:
+ * @author:             Gary Yang , Martin Yu
+ * @version 1.2.5
+ * Created Date :       September,9,2001
+ * Last modified Date : September,9,2002 	// 增加郵件帳號檢查 // 增加檔案 UPLOAD 檢查
+ *      September,10,2002	// Button On Submit Disabled Function & element validation
+ *      Septerber,11,2002	// 正規化資料驗證，Formula 資料
+ *      November,15,2002	// radio,checkbox modify & add 日期 yymm
+ *      1/17/2003		// modify date lenght
+ *      1/23/2003               // 增加 #true & #mandatory Field Mark function
+ *		12/11/2006		//Add setValidAttribute function & radio, checkbox 不計算 disabled 的物件	
+ */
+
+/**Import JavaScript Libaray Zone**/
+
+/**Import other Library Zone**/
+//document.write("<style>INPUT {behavior:url(js/setTEXTEvent.htc)}</style>");
+
+/**Initialize global variables**/
+var debutMode = false;
+var errorMessage = "";
+var validateMessage = "";
+var FV_Valid_ID = 'id';
+var FV_Intimation_Obj;
+var FV_Intimation_IntervalObj;
+var FV_Intimation_Count = 0;
+
+function setValidAttribute(id){
+	if(id != null){
+		FV_Valid_ID = id;
+	}
+}
+
+function getValidateMsg() {
+	return validateMessage;
+}
+
+/******** Purpose : 去除字串前後的特殊字元[\n,\t,\r,space]
+ *  ArgumentsType : trim(String aStr)
+ *        Returns : String Object
+ *     Parameters :
+ *                  1.aStr - 要去除前後特殊字元的字串
+ */
+function trim(aStr) {
+	
+	try{
+		return aStr.replace(/^\s{1,}/, "").replace(/\s{1,}$/, "");
+	}catch(e){
+		aStr.value = aStr.value.replace(/^\s{1,}/, "").replace(/\s{1,}$/, "");
+	}
+}
+
+
+/******** Purpose : 驗證輸入資料的正確性
+ *  ArgumentsType : doSubmit(FormObject frmObj,Boolean v)
+ *        Returns : none
+ *     Parameters :
+ *                  1.frmObj - 欲執行資料驗證的表單物件
+ *                  2.bAlert - 是否 show error alert message
+ */
+
+function doSubmitForm( frmObj, bAlert ){
+	if(debutMode) alert('--- doSubmitForm --- Begin');
+
+	var bReturn = false;
+	if( bAlert != false ) bAlert = true;
+	
+	bReturn = doValidateForm( frmObj, bAlert );
+	
+	if( bReturn ) {
+	  //markNeedField(frmObj, false);
+	  frmObj.submit();
+	}else{
+	  //markNeedField(frmObj, true);
+	}
+	   	
+
+	if(debutMode) alert('--- doSubmitForm --- End');
+	return bReturn;
+}
+
+
+/******** Purpose : 依據表單物件中的元素識別ID作資料正確性驗證
+ *
+ *   驗證輸入格式 : <input type='元素型態' name='元素名稱' id='元素說明#是否驗證元素的布林值|資料驗證型態:資料驗證範圍'>
+ *
+ *       範例說明 : 未輸入任何資料時彈出'範例字串是必須輸入的欄位.'的警示小視窗,
+ *                  是否驗證元素的布林值為true,執行資料正確性驗證,
+ *                  元素txt1輸入的資料型態的字串,資料長度大於2小於5
+ *
+ *           範例 : <input type='text' name='txt1' id='範例字串#true|str:2~5'>
+ *
+ *  ArgumentsType : doValidateForm(FormObject frmObj)
+ *        Returns : Boolean,[true:資料輸入檢查無誤,false:資料輸入檢查有誤]
+ *     Parameters :
+ *                  1.frmObj - 欲執行資料驗證的表單物件
+ *                  2.bAlert - 是否 show error alert message
+ */
+function doValidateForm( frmObj, bAlert ){
+	if(debutMode) alert('--- doValidateForm --- Begin, Form Name --> |' + frmObj.name + '|');
+
+	var bReturn = true;
+	if( bAlert != false ) bAlert = true;		
+
+   	var elementType = "|button|text|textarea|file|select-one|select-multiple|checkbox|radio|password|";
+	var objID;
+
+	if ( elementType.indexOf('|' + frmObj.type + '|') > -1 ){
+		if(debutMode) alert('--- e Name ---' + frmObj.name + '\n\n\n--- e Form Type ---' + frmObj.type );
+
+		try{
+			bReturn = doValidateFieldID( frmObj, trim( eval('frmObj.'+FV_Valid_ID) ), bAlert );
+		}catch(e){}
+	
+	}else{
+	
+		//alert( frmObj.elements.length);
+		for( var i=0; i < frmObj.elements.length; i++ ){
+			e = frmObj.elements[i];
+
+			if ( e.type == 'button' ) continue;	
+			if ( e.disabled == true) continue;	//如果 object 是 disable 屬性則不檢查
+			
+			try{
+				objID = trim( eval('e.' + FV_Valid_ID) );
+
+				if( objID != ''){
+					//if(debutMode) alert('--- e Name ---' + e.name + '\n\n\n--- e ID ---' + objID );
+					
+					if(elementType.indexOf('|' + e.type.toLowerCase() + '|') > -1){
+						if(debutMode) alert('--- e Name ---' + e.name + '\n\n\n--- e Type ---' + e.type );
+						bReturn = doValidateFieldID( e, objID, bAlert );
+						if(bReturn == false){
+							break;
+						}
+					}
+				}
+
+			}catch(e){
+				objID = '';
+			}
+
+		}	
+	}
+
+
+	if(debutMode) alert('--- doValidateForm --- End');
+
+	return bReturn;
+}
+
+/**************************************************************************/
+function doValidateField( e, bAlert ) {
+	var bReturn = true;
+	if ( bAlert != false ) bAlert = true;	
+	
+	try{		
+		if( (eval('e.' + FV_Valid_ID)) == null){
+			e = e[0];
+		}
+		bReturn  = doValidateFieldID( e, eval('e.' + FV_Valid_ID), bAlert );
+	}catch(e){
+		bReturn  = doValidateFieldID( e, eval('e.' + FV_Valid_ID), bAlert );		
+	}	
+	
+	return bReturn;
+}
+
+/**************************************************************************/
+function doValidateFieldID( e, id, bAlert ) {
+	if(debutMode) alert('--- doValidateFieldID(e,ID,bAlert) --- Begin\n\n' + '--- element Type ---' + e.type + '  |   --- element Name ---' + e.name + "|");
+	
+	var bReturn = true;
+	if ( bAlert != false ) bAlert = true;
+
+	try{
+
+	id = trim(id);
+	validToken = 0;
+	commonMsg="", IsValid="", ValidType="";
+	ValidFormat="", ValidLbound="", ValidUbound="";
+
+	// id="commonMsg # IsValid | ValidType : ValidFormat ~ ValidLbound ~ ValidUbound"
+	//												
+	// id="錯誤訊息#true|str:3~5"
+	// id="錯誤訊息#true|date:yymmdd~910101~911231"
+
+
+	commonMsg  = id;	if(debutMode) alert('-- doValidateFieldID(e, id, bAlert) ---\n id = ' + commonMsg);
+
+	validToken = commonMsg.split("#");
+	if ( validToken.length >= 2 ) {				
+		IsValid   = trim(commonMsg.substring(validToken[0].length+1));	//alert(IsValid);
+		commonMsg = trim(validToken[0]); //取訊息字串
+
+		validToken  = IsValid.split("|");
+		if ( validToken.length >= 2 ) {			
+			ValidType = trim(IsValid.substring(validToken[0].length+1));	//alert(ValidType);
+			IsValid   = trim(validToken[0]); //取比較的方式 true, false, mandatory
+
+			validToken = ValidType.split(":");
+			if ( validToken.length >= 2 ) {				
+				ValidFormat = trim(ValidType.substring(validToken[0].length+1));				
+				ValidType   = trim(validToken[0]); //取比較的型態
+
+				validToken = ValidFormat.split("~");				
+				switch( validToken.length ){
+					case 0 :					
+					case 1 :
+						break;
+					case 2 :
+						ValidFormat = trim(validToken[0]);
+						ValidLbound = trim(validToken[0]);
+						ValidUbound = trim(validToken[1]);
+						break;
+					case 3 :
+						ValidFormat = trim(validToken[0]);
+						ValidLbound = trim(validToken[1]);
+						ValidUbound = trim(validToken[2]);
+						break;
+				}
+				
+				
+				
+				
+				//if ( validToken.length >= 2 ) {
+				//	//上限值
+				//	ValidRange2 = trim(ValidRange1.substring(validToken[0].length+1));	//alert(ValidRange2);
+				//	ValidRange1 = trim(validToken[0]); //下限值
+
+				//	validToken = ValidRange2.split("~");
+				//	if ( Range2Token.length >= 2 ) {
+				//		ValidRange3 = trim(ValidRange2.substring(validToken[0].length+1));	//alert(ValidRange3);
+				//		ValidRange2 = trim(validToken[0]);
+				//	}
+				//}
+			}
+			else{
+				validToken = ValidType.split("~");
+				switch( validToken.length ){
+					case 0 :					
+					case 1 :
+						break;
+					case 2 :
+						ValidFormat = trim(validToken[0]);
+						ValidLbound = trim(validToken[0]);
+						ValidUbound = trim(validToken[1]);
+						break;
+					case 3 :
+						ValidFormat = trim(validToken[0]);
+						ValidLbound = trim(validToken[1]);
+						ValidUbound = trim(validToken[2]);
+						break;
+				}			
+			}
+		}
+	}
+	
+	if(debutMode) alert('-- doValidateFieldID(e, ID, bAlert) ---\n\n' 
+		+ 'IsValid = ' + IsValid + '\n\n'
+		+ 'ValidType = ' + ValidType + '\n\n'
+		+ 'ValidFormat = ' + ValidFormat + '\n\n'
+		+ 'ValidLbound = ' + ValidLbound + '\n\n'		
+		+ 'ValidUbound = ' + ValidUbound + '\n\n'
+		);
+
+    //checks input types - :"text", ["select-one", "select-multiple", "textarea", "checkbox", "radio"]
+
+	if( IsValid == "false" ){
+         	bReturn = true; //alert("no check data!!");
+    	}
+    	else if( IsValid == "true" || IsValid == "mandatory" ){
+      	var IsMandatory = ( IsValid == "mandatory" ? true : false );      	
+
+		switch (e.type) {
+
+			case "button":
+		  		e.value = commonMsg;
+		  		e.disabled = true;
+	  			break;
+
+
+ 	  		case "text":
+    			case "textarea" :
+    			case "password" :
+				if( trim(e.value) == "" ){
+					if( IsMandatory == false ){
+					     return OnFailure(e, commonMsg, ["text"], bAlert);
+					}
+				}
+				else{
+					ValidResult = txtValid( e, ValidType, ValidFormat, ValidLbound, ValidUbound );
+					if ( ValidResult != true && ValidResult != "Valid Data" ) {
+						if ( ValidResult != false ) {
+							validateMessage = ValidResult;							
+							if(bAlert){ 
+								alert(validateMessage);
+							}
+							e.focus();
+							try{
+								e.select();
+							}catch(e){}
+
+							return false;
+						}
+				  	return ( OnFailure(e, commonMsg, [ValidType, ValidLbound, ValidUbound], bAlert) );
+					}
+				
+				}
+				break;
+
+
+			case "file":
+				//make sure AT LEAST one file gets attached
+				if ( trim(e.value) == "" ) {
+					if ( IsMandatory == false ) {
+						return OnFailure( e, commonMsg, ["file"], bAlert );
+					}
+				} else {
+					//check type of file that is being uploaded
+					if ( ValidFormat != "" && validateFileType( e, ValidFormat ) == false ){
+						return OnFailure( e, commonMsg, ["file", ValidFormat], bAlert );
+					}
+					//check that file limit has not been reached
+					//if ( ValidUbound != "" && isNaN(ValidUbound)==false && validateFileLimit( e, parseInt(ValidUbound,10) , parseInt(ValidUbound),10) == false ) return OnFailure(e, commonMsg, ["fileLimit"], bAlert);
+				}
+				break;
+			
+			
+			case "select-one":
+			case "select-multiple":
+				if ( e.selectedIndex == -1 || (e.selectedIndex==0 && (e.value==''||e.value=='0')) ){
+					if ( IsMandatory == false ) {
+						return OnFailure(e, commonMsg, [e.type], bAlert);
+					}
+				}
+				break;
+
+			
+			case "checkbox":
+			case "radio":
+				//alert(ValidLbound + ', ' + ValidUbound);
+				hasChecked = false;
+				p = eval( "e.form." + e.name );
+			
+				if( p.length>0 ){
+					for( var r=0; r < p.length; r++ ){
+						if( p[r].checked && !p[r].disabled ){
+							hasChecked = true;
+							break;
+						}
+					}
+				}
+				else{
+					if( p.checked && !p.disabled ){
+						hasChecked = true;
+					}
+				}
+			
+				if (!hasChecked) {
+					return OnFailure( e, commonMsg, [e.type], bAlert );
+				}
+				break;
+
+			default:
+				//must be a checkbox or a radio group if none of above
+				if( !e[0] ) {//handle single item group first
+					switch( e.type ) {
+						case "checkbox":
+							if ( !e.checked ) return OnFailure( e, commonMsg, ["default-SI-checkbox"], bAlert );
+							break;
+						case "radio":
+							if ( !e.checked ) return OnFailure( e, commonMsg, ["default-SI-radio"], bAlert );
+							break;
+						default:
+							break;
+					} //end switech
+				} 
+				else { //handle multi-item groups
+					switch ( e[0].type ) {
+						case "checkbox":
+							if ( !isSomethingSelected( e ) ) return OnFailure( e[0], commonMsg, ["default-MI-checkbox"], bAlert );
+							break;
+						case "radio":
+							if ( !isSomethingSelected( e ) ) return OnFailure( e[0], commonMsg, ["default-MI-radio"], bAlert );
+							break;
+						default:
+							break;
+					} //end switech
+				} //end if
+				break;
+
+		} // end of switch
+	
+	} // end if ( IsValid == 'true')
+
+	}catch(e){
+	}
+
+	if(debutMode) alert('--- doValidateFieldID(e,ID,bAlert) --- End, Return --> ' + bReturn);
+
+	return bReturn;
+}
+
+
+/******** Purpose : 依據資料型態及資料範圍作資料正確性驗證
+ *  ArgumentsType : txtValid(e, ValidType, ValidFormat, ValidLbound, ValidUbound)
+ *        Returns : (boolean) {true : 合法資料 | false : 驗證失敗}
+ *     Parameters :
+ *                  1.	e - 物件 Object
+ *				2.	ValidType - 資料型態
+ *                  3.	ValidFormat - 資料格式
+ *                  4.	ValidLbound - 下限值
+ *                  5.	ValidUbound - 上限值
+ */
+function txtValid(e, ValidType, ValidFormat, ValidLbound, ValidUbound){
+	if(debutMode) alert('--- txtValid(e, ValidType, ValidFormat, ValidLbound, ValidUbound) --- Begin');
+	var bReturn = true;
+
+	try {
+
+		var ValidData = trim(e.value);	   	
+	   	
+
+       	switch ( ValidType.toLowerCase() ){ // 換成小寫
+
+		   	case "formula"	 :
+		   		ValidFormat = ValidLbound=='' ? ValidFormat : ValidFormat + '~' + ValidLbound;
+       			ValidFormat = ValidUbound=='' ? ValidFormat : ValidFormat + '~' + ValidUbound;
+		   		var formula = ValidFormat;	//alert(formula);
+		   		var repStr = isNaN(e.value) ? "'"+e.value+"'" : e.value;
+	
+				if( e.value.indexOf('??') == -1 ){
+					while( formula.indexOf('??') != -1 ){
+						formula = formula.replace('??', repStr);
+					}	//alert(formula);
+					if( !eval(formula) ){
+						bReturn = false;
+					}
+				}
+	       		break;
+
+       		case "regexp" :
+				//create the RegExp componet
+				ValidFormat = ValidLbound=='' ? ValidFormat : ValidFormat + '~' + ValidLbound;
+       			ValidFormat = ValidUbound=='' ? ValidFormat : ValidFormat + '~' + ValidUbound;
+				var Pattern = ValidFormat;
+				var re = new RegExp( Pattern, 'g' );	// g：全域比對（Global match）
+												// i：忽略大小寫（Ignore case）
+												// gi：全域比對並忽略大小寫
+				if( !re.test(ValidData)){
+					bReturn = false; //OnFailure(e, commonMsg, ["regexp"], bAlert);
+				}
+				break;
+
+       		case "regexp-replace" :
+       			ValidFormat = ValidLbound=='' ? ValidFormat : ValidFormat + '~' + ValidLbound;
+       			ValidFormat = ValidUbound=='' ? ValidFormat : ValidFormat + '~' + ValidUbound;
+				//create the RegExp componet
+				var replaceString = trim( ValidFormat.substring( ValidFormat.lastIndexOf('~')+1 ) );
+				var Pattern = trim( ValidFormat.substring( 0,ValidFormat.lastIndexOf('~') ) );
+				var re = new RegExp( Pattern, 'g' );	// g：全域比對（Global match）
+												// i：忽略大小寫（Ignore case）
+												// gi：全域比對並忽略大小寫
+				rw = ( replaceString == null || replaceString == '' ) ? prompt('請輸入要置換的字串 : ','') : replaceString;
+				e.value = e.value.replace( re, rw );
+				break;
+
+       		case "str" :
+               	if( ValidLbound != "" ){
+					if ( isNaN(ValidLbound) ) return("不合法的字串範圍表示 \(錯誤的下限表示法:" + ValidLbound + "\)");
+                        	if ( computeStrLength(ValidData) < parseInt(ValidLbound,10) ) return false;
+                    }
+
+				if( ValidUbound != "" ){
+                         if ( isNaN(ValidUbound) ) return("不合法的字串範圍表示 \(錯誤的上限表示法:" + ValidUbound + "\)");
+                         if ( computeStrLength(ValidData) > parseInt(ValidUbound,10) ) return false;
+                    }
+                    break;
+                    
+                case "cstr" :// added by Richard 2005/11/24                                
+               	if( ValidLbound != "" ){
+					if ( isNaN(ValidLbound) ) return("不合法的字串範圍表示 \(錯誤的下限表示法:" + ValidLbound + "\)");
+                        	if ( ValidData.length < parseInt(ValidLbound,10) ) return false;
+                    }
+
+				if( ValidUbound != "" ){
+                         if ( isNaN(ValidUbound) ) return("不合法的字串範圍表示 \(錯誤的上限表示法:" + ValidUbound + "\)");
+                         if ( ValidData.length > parseInt(ValidUbound,10) ) return false;
+                    }
+                    break;
+
+       		case "num" :
+				//if( ValidData.charAt(0) == "0" ) {
+			   	//	if ( ValidData.charAt(1) != "." ) return "數字 \(" + ValidData + "\) 格式輸入有誤！";
+			     //}				
+
+			     if( ValidLbound != "" ){
+			          if ( isNaN(ValidLbound) ) return "不合法的數字範圍表示 \(錯誤的下限表示法:" + ValidLbound + "\)";			          
+			          if ( computeStrLength(ValidData) < parseInt(ValidLbound,10) ) return false;
+			     }
+
+			     if( ValidUbound != "" ){
+			          if ( isNaN(ValidUbound) ) return "不合法的數字範圍表示 \(錯誤的上限表示法:" + ValidUbound + "\)";			          
+			          if ( computeStrLength(ValidData) > parseInt(ValidUbound,10) ) return false;
+			     }			     
+			     
+			     if( isNaN(ValidData) ) return "數字 \(" + ValidData + "\) 格式輸入有誤！"; 	
+			     
+			     break;
+
+       		case "int":
+       			var ValidRange = ValidLbound + '~' + ValidUbound;
+               	RangeToken = ValidRange.split("~");
+
+                    if( ValidData.charAt(0) == "0" ){
+                    	if( (ValidData.length == 1) && (parseInt(ValidData) == parseInt(RangeToken[0])) ){
+                         	return true;
+                         }
+                         else{
+                    	     if( (parseInt(ValidData) < parseInt(RangeToken[0])) && (ValidData.length == 1) ){
+                         		return "長度需至少為 " + RangeToken[0] + "！";
+                             	}
+                             	else{
+                              	if ((RangeToken[0] == "") && (ValidData.length > 1)) return "不合法的整數 \(" + ValidData + "\)";
+                               	if ((RangeToken[0] != "") && (ValidData.length > 1)) return "不合法的整數 \(" + ValidData + "\)";
+                             	}
+                         }
+                	}
+
+  				if( (ValidData.charAt(0) == "-") && (ValidData.charAt(1) == "0") ) return "不合法的整數 \(" + ValidData + "\)";
+	               if( ValidData.indexOf(".") != -1 ) return "不可使用小數點";
+
+                    if(RangeToken[0] != ""){
+                    	LBound = RangeToken[0];
+                         if ( isNaN(LBound) ) return "不合法的數字範圍表示 \(錯誤的下限表示法:" + LBound + "\)";
+                         if ( parseInt(ValidData) < parseInt(LBound) ) return false;
+                         if ( isNaN(ValidData) ) return "數字範圍表示 \(" + ValidData + "\) 格式輸入有誤！";
+                    }
+
+                    if(RangeToken[1] != ""){
+                    	UBound = RangeToken[1];
+                         if ( isNaN(UBound) ) return "不合法的數字範圍表示 \(錯誤的上限表示法:" + UBound + "\)";
+                         if ( parseInt(ValidData) > parseInt(UBound) ) return false;
+                         if ( isNaN(ValidData) ) return "數字範圍表示 \(" + ValidData + "\) 格式輸入有誤！";
+                    }
+
+                    if( isNaN(ValidData) ) return "數字 \(" + ValidData + "\) 格式輸入有誤！";
+
+                    break;
+
+       		case "+int":
+       			var ValidRange = ValidLbound + '~' + ValidUbound;
+                    RangeToken = ValidRange.split("~");
+
+               	if( ValidData.charAt(0) == "0" ){
+                    	if( (ValidData.length == 1) && (parseInt(ValidData) == parseInt(RangeToken[0])) ){
+                         	return true;
+                         }
+                         else{
+                         	if( (parseInt(ValidData) < parseInt(RangeToken[0])) && (ValidData.length == 1) ){
+                              	return "正整數應大於等於 " + RangeToken[0];
+                             	}
+                             	else{
+                              	if((RangeToken[0] == "") && (ValidData.length > 1)) return "正整數 \(" + ValidData + "\) 格式輸入有誤";
+                              	if((RangeToken[0] != "") && (ValidData.length > 1)) return "正整數 \(" + ValidData + "\) 格式輸入有誤";
+                             	}
+                         }
+               	}
+               	
+                    if( ValidData.charAt(0) == "-" ) return "正整數 \(" + ValidData + "\) 格式輸入有誤";
+                    if( ValidData.indexOf("-") != -1 ) return "正整數 \(" + ValidData + "\) 格式輸入有誤";
+                    if( ValidData.indexOf(".") != -1 ) return "不可使用小數點";
+
+                  	if(RangeToken[0] != ""){
+                    	LBound = RangeToken[0];
+                         if( isNaN(LBound) ) return "不合法的數字範圍表示 \(錯誤的下限表示法:" + LBound + "\)";
+                         if( parseInt(ValidData) < parseInt(LBound) ) return false;
+                         if( isNaN(ValidData) ) return "正整數範圍表示 \(" + ValidData + "\) 格式輸入有誤";
+                  	}
+
+                    if(RangeToken[1] != ""){
+                    	UBound = RangeToken[1];
+                         if( isNaN(UBound) ) return "不合法的數字範圍表示 \(錯誤的上限表示法:" + UBound + "\)";
+                         if( parseInt(ValidData) > parseInt(UBound) ) return false;
+                         if( isNaN(ValidData) ) return "正整數範圍表示 \(" + ValidData + "\) 格式輸入有誤";
+               	}
+
+                    if( isNaN(ValidData) ) return "正整數 \(" + ValidData + "\) 格式輸入有誤";
+
+                    break;
+
+     		case "float"  :
+       			var ValidRange = ValidLbound + '~' + ValidUbound;
+       
+                    DPL = "none";
+                    if(ValidRange.split("%") != ValidRange){
+                    	RangeToken =ValidRange.split("%");
+                         DPL = RangeToken[1];
+                         RangeToken = RangeToken[0].split("~");
+                    }
+                    if( DPL == "none") RangeToken = ValidRange.split("~");
+
+                    //if( ValidData.indexOf(".") == -1 ) return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+                    //if( (ValidData.charAt(0) == "0") && (ValidData.charAt(1) != ".") ) return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+
+                    if( (ValidData.charAt(0) == "-") && (ValidData.charAt(1) == "0") ){
+                    	if (ValidData.charAt(2) != ".") return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+                    }
+
+                    if(RangeToken[0] != ""){
+                    	LBound = RangeToken[0];
+                         if( isNaN(LBound) ) return "不合法的數字範圍表示 \(錯誤的下限表示法:" + LBound + "\)";
+                         if( parseFloat(ValidData) < parseFloat(LBound) ) return false;
+                         if( isNaN(ValidData) ) return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+                    }
+                    if(RangeToken[1] != ""){
+                    	UBound = RangeToken[1];
+                         if( isNaN(UBound) ) return "不合法的數字範圍表示 \(錯誤的上限表示法:" + UBound + "\)";
+                         if( parseFloat(ValidData) > parseFloat(UBound) ) return false;
+                         if( isNaN(ValidData) ) return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+                    }
+
+                    if( isNaN(ValidData) ) return "浮點數 \(" + ValidData + "\) 格式輸入有誤";
+
+                    if( DPL != "none" ){
+                    	dotPos = ValidData.indexOf(".");
+                         DP = ValidData.substring(dotPos+1,ValidData.length);
+                         if(DP.length > parseInt(DPL)) return "小數點最大長度為 " + DPL + " !";
+                    }
+
+                    break;
+
+       		case "+float":
+       			var ValidRange = ValidLbound + '~' + ValidUbound;
+       			
+                    DPL = "none";
+                    if(ValidRange.split("%") != ValidRange){
+                    	RangeToken =ValidRange.split("%");
+                         DPL = RangeToken[1];
+                         RangeToken = RangeToken[0].split("~");
+				}
+                    if( DPL == "none") RangeToken = ValidRange.split("~");
+
+				if( ValidData.indexOf(".") == -1 ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				if( (ValidData.charAt(0) == "0") && (ValidData.charAt(1) != ".") ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				if( ValidData.indexOf("-") != -1 ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				
+				if(RangeToken[0] != ""){
+					LBound = RangeToken[0];
+				  	if( isNaN(LBound) ) return "不合法的數字範圍表示 \(錯誤的下限表示法:" + LBound + "\)";
+					if( parseFloat(ValidData) < parseFloat(LBound) ) return false;
+				  	if( isNaN(ValidData) ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				}
+				
+				if(RangeToken[1] != ""){
+					UBound = RangeToken[1];
+				  	if( isNaN(UBound) ) return "不合法的數字範圍表示 \(錯誤的上限表示法:" + UBound + "\)";
+				  	if( parseFloat(ValidData) > parseFloat(UBound) ) return false;
+				  	if( isNaN(ValidData) ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				}
+				
+				if( isNaN(ValidData) ) return "正浮點數 \(" + ValidData + "\) 格式輸入有誤";
+				
+				if( DPL != "none" ){
+					dotPos = ValidData.indexOf(".");
+				  	DP = ValidData.substring(dotPos+1,ValidData.length);
+				  	if(DP.length > parseInt(DPL)) return "小數點最大長度為 " + DPL + " !";
+				}				
+				
+				break;
+
+       		case "pid":
+				switch( ValidFormat ){
+					case "format":
+						return validPID(ValidData, false);
+                			break;
+					case "full":
+           				return validPID(ValidData, true);
+           				break;
+					default:
+           				return validPID(ValidData, false);
+           				break;
+           		}
+	        		break;
+
+       		case "pid11":
+					
+				switch( ValidFormat ){
+					case "format":
+						return validPID11(ValidData, false);
+                			break;
+					case "full":
+
+           				return validPID11(ValidData, true);
+           				break;
+					default:
+           				return validPID11(ValidData, false);
+           				break;
+           		}
+	        		break;	        		
+	        		
+
+       		case "email":
+				switch( ValidFormat ){
+					case "format":
+						return ValidateEmail(ValidData);
+                			break;
+					case "full":
+           				return ValidateEmailFull(ValidData);
+           				break;
+					default:
+           				return ValidateEmail(ValidData);
+           				break;
+           		}
+	        		break;
+
+       		case "date":
+				bReturn = isProperDate(ValidData, ValidFormat, ValidLbound, ValidUbound);
+				bReturn = bReturn==true ? true : '日期格式輸入有誤，請輸入正確的日期 !! 格式：(' + bReturn + ')';
+				break;
+
+       		
+       		case "cid":
+				switch( ValidFormat ){
+					case "format":
+						return validCID(ValidData, false);
+                			break;
+					case "full":
+           				return validCID(ValidData, true);
+           				break;
+					default:
+           				return validCID(ValidData, false);
+           				break;
+           		       }
+           		       
+	        		break;
+	        		
+	        case "pcid":				
+				if(ValidLbound=="format") {
+					if(ValidUbound=="formate") {
+						return vaildPCID(ValidData, false, false);	
+					} else if(ValidUbound=="full") {
+						return vaildPCID(ValidData, false, true);
+					} else {
+						return vaildPCID(ValidData, false, false);
+					}
+				} else if(ValidLbound=="full") {
+					if(ValidUbound=="formate") {
+						return vaildPCID(ValidData, true, false);	
+					} else if(ValidUbound=="full") {
+						return vaildPCID(ValidData, true, true);
+					} else {
+						return vaildPCID(ValidData, true, false);
+					}
+				} else {
+					return vaildPCID(ValidData, false, false);
+				}				
+	        		break;
+	        		
+	        case "pcid11":		
+
+				if(ValidLbound=="format") {
+					if(ValidUbound=="formate") {
+						return vaildPCID11(ValidData, false, false);	
+					} else if(ValidUbound=="full") {
+						return vaildPCID11(ValidData, false, true);
+					} else {
+						return vaildPCID11(ValidData, false, false);
+					}
+				} else if(ValidLbound=="full") {
+					if(ValidUbound=="formate") {
+						return vaildPCID11(ValidData, true, false);	
+					} else if(ValidUbound=="full") {
+						return vaildPCID11(ValidData, true, true);
+					} else {
+						return vaildPCID11(ValidData, true, false);
+					}
+				} else {
+					return vaildPCID11(ValidData, false, false);
+				}				
+	        		break;	        		
+	        		
+	        		
+       		default:
+       			break;
+
+      	}
+
+		return bReturn;
+
+	} catch(e) {
+		// 錯誤處理的程式碼
+		alert('錯誤碼: ' + (e.Number & 0xFFFF) + '\n\n錯誤說明(message): ' + e.message + '\n\n錯誤說明(description): ' + e.description);
+	} finally {
+
+	}
+
+	if(debutMode) alert('--- txtValid(e, ValidType, ValidFormat, ValidLbound, ValidUbound) --- End');
+}
+
+
+/******** Purpose : 判斷是否為合法日期
+ *  ArgumentsType : isProperDate(String argDate,String Format)
+ *        Returns : Boolean,{true - 合法日期 | false - 不合法日期}
+ *     Parameters :
+ *                  1.argDate - 欲驗證日期
+ *                  2.Format - 日期格式,
+ *                             this function expects date is format of mm/dd/yyyy or mm/dd/yy or
+ *                                                                     mm-dd-yyyy or mm-dd-yy or
+ *                                                                     yyyy/mm/dd or yy/mm/dd or
+ *                                                                     yyyy-mm-dd or yy-mm-dd or
+ *                                                                     yyyymmdd or yymmdd or
+ *                                                                     mmddyyyy or mmddyy or
+ *							              yy4-mm-dd or yy4/mm/dd or
+ *							              mm-dd-yy4 or mm/dd/yy4
+ */
+function isProperDate(argDate, Format, ValidUbound, ValidLbound) {
+	var sReturn = false;
+	var tmpYear = '1900';
+	var tmpMon = '01';
+	var tmpDay = '01';
+	var datePattern;
+
+	var argDate = trim(argDate);
+	
+    switch (Format){
+        case "yymm" :
+			datePattern = /^\d{2}\d{2}$/g;
+			break;
+        case "yymmdd" :
+        case "mmddyy" :
+			datePattern = /^\d{2}\d{2}\d{2}$/g;
+			break;
+        case "yyyymmdd" :
+			datePattern = /^\d{4}\d{2}\d{2}$/g;
+			break;
+        case "mmddyyyy" :
+			datePattern = /^\d{2}\d{2}\d{4}$/g;
+			break;
+		case "yy4/mm/dd" :
+			datePattern = /^\d{1,4}\/\d{2}\/\d{2}$/g;
+			break;
+        case "yy4-mm-dd" :
+			datePattern = /^\d{1,4}\/\d{2}\/\d{2}$/g;
+			break;
+        case "yy/mm/dd" :
+			datePattern = /^\d{2}\/\d{2}\/\d{2}$/g;
+            break;
+        case "yy-mm-dd" :
+			datePattern = /^\d{2}-\d{2}-\d{2}$/g;
+            break;
+        case "yyyy/mm/dd" :
+			datePattern = /^\d{4}\/\d{2}\/\d{2}$/g;
+			break;
+        case "yyyy-mm-dd" :
+			datePattern = /^\d{4}-\d{2}-\d{2}$/g;
+            break;
+        case "mm/dd/yy4" :
+			datePattern = /^\d{2}\/\d{2}\/\d{1,4}$/g;
+			break;
+        case "mm-dd-yy4" :
+			datePattern = /^\d{2}-\d{2}-\d{1,4}$/g;
+			break;
+        case "mm/dd/yy" :
+			datePattern = /^\d{2}\/\d{2}\/\d{2}$/g;
+			break;
+        case "mm-dd-yy" :
+			datePattern = /^\d{2}-\d{2}-\d{2}$/g;
+			break;
+        case "mm/dd/yyyy" :
+			datePattern = /^\d{2}\/\d{2}\/\d{4}$/g;
+			break;
+        case "mm-dd-yyyy" :
+			datePattern = /^\d{2}-\d{2}-\d{4}$/g;
+			break;
+        default :
+	        return false;
+	}
+
+	var dateFormatSep, dateFromatSplit;
+	var argDateSplit;
+	
+	if(datePattern.test(argDate)){
+		dateFormatSep = getDateSeparator(Format);
+		if( dateFormatSep == '' ){
+			if(Format.indexOf('yy') >= 0){
+				tmpYear = parseInt(argDate.substring(Format.indexOf('yy'), Format.indexOf('yy')+2)) + 1911;
+			}
+			if(Format.indexOf('yyyy') >= 0){
+				tmpYear = argDate.substring(Format.indexOf('yyyy'), Format.indexOf('yyyy')+2);
+			}
+			if(Format.indexOf('mm') >= 0){
+				tmpMon = argDate.substring(Format.indexOf('mm'), Format.indexOf('mm')+2);
+			}
+			if(Format.indexOf('dd') >= 0){
+				tmpDay = argDate.substring(Format.indexOf('dd'), Format.indexOf('dd')+2);
+			}		
+		}else{
+			dateFromatSplit = Format.split(dateFormatSep);
+			argDateSplit = argDate.split(dateFormatSep);
+			for(var i=0; i<dateFromatSplit.length; i++){
+				switch (dateFromatSplit[i]){
+					case "yy" :
+					case "yy4" :
+						tmpYear = parseInt(argDateSplit[i], 10) + 1911;
+						break;
+					case "yyyy" :
+						tmpYear = argDateSplit[i];
+						break;
+					case "mm" :
+						tmpMon = argDateSplit[i];
+						break;
+					case "dd" :
+						tmpDay = argDateSplit[i];
+						break;
+				}
+			}			
+		}
+		
+		sReturn = isProperDay(tmpDay, tmpMon, tmpYear) && isProperMonth(tmpMon) && isProperYear(tmpYear);
+	}
+	
+    //alert("DateFormat : " + Format + "\n" + "Year : " + tmpYear + "\n" + "Mon : " + tmpMon + "\n" + "Day : " + tmpDay + "\n");
+	return (sReturn==true ? true : Format);
+}
+
+/******** Purpose : 判斷字串是否僅含有space或\t字元
+ *  ArgumentsType : isWhiteSpace(String argWhiteSpace)
+ *        Returns : Boolean,{true:字串僅含有space或\t字元 | false:字串不僅僅含有space或\t字元}
+ *     Parameters :
+ *                  1.argWhiteSpace - 欲驗證字串
+ */
+function isWhiteSpace(argWhiteSpace) {
+	argWs = argWhiteSpace.toString();
+
+	for (var intI=0; intI < argWs.length; intI++)
+		if (argWs.charAt(intI) != ' ' && argWs.charAt(intI) != '\t')
+			return false;
+
+	return true;
+}
+
+
+/******** Purpose : 判斷是否為閏年
+ *  ArgumentsType : isLeapYear(String argYear)
+ *        Returns : Boolean{true - 閏年 | false - 平年}
+ *     Parameters :
+ *                  1.argYear - 欲驗證的西元年份
+ */
+function isLeapYear(argYear) {
+	return ((argYear % 4 == 0) && (argYear % 100 != 0)) || (argYear % 400 == 0);
+}
+
+
+/******** Purpose : 判斷某月份有幾天
+ *  ArgumentsType : daysInMonth(String argMonth, String argYear)
+ *        Returns : Integer - 欲判別某月份的總天數
+ *     Parameters :
+ *                  1.argMonth - 欲判別的月份
+ *                  2.argYear - 欲判別的西元年份
+ */
+function daysInMonth(argMonth, argYear) {
+	switch (Number(argMonth)) {
+		case 1:		// Jan
+		case 3:		// Mar
+		case 5:		// May
+		case 7:		// Jul
+		case 8:		// Aug
+		case 10:		// Oct
+		case 12:		// Dec
+			return 31;
+			break;
+
+		case 4:		// Apr
+		case 6:		// Jun
+		case 9:		// Sep
+		case 11:		// Nov
+			return 30;
+			break;
+
+		case 2:		// Feb
+			if (isLeapYear(argYear))
+				return 29;
+			else
+				return 28;
+			break;
+
+		default:
+			return 0;
+	}
+}
+
+
+/******** Purpose : 判斷並取得日期的分隔符號
+ *  ArgumentsType : getDateSeparator(String argDate)
+ *        Returns : Character - 回傳的分隔符號 , {'-' | '/' | ' '}
+ *     Parameters :
+ *                  1.argDate - 欲判斷的日期,
+ *                              this function expects date is format of mm/dd/yyyy or mm/dd/yy or
+ *                                                                      mm-dd-yyyy or mm-dd-yy or
+ *                                                                      yyyy/mm/dd or yy/mm/dd or
+ *                                                                      yyyy-mm-dd or yy-mm-dd or
+ *                                                                       yy4-mm-dd or yy4/mm/dd
+ */
+function getDateSeparator(argDate) {
+	var sReturn;
+	
+	if (argDate.indexOf('-') > 0) {	
+		sReturn = '-';
+	} else {
+		if (argDate.indexOf('/') > 0) {
+			sReturn = '/';
+		} else {
+			sReturn = '';
+		}
+	}
+	
+	return sReturn;
+}
+
+
+/******** Purpose : 取得日期中的年份字串
+ *  ArgumentsType : getYear(String argDate)
+ *        Returns : String - 回傳的年份字串
+ *     Parameters :
+ *                  1.argDate - 欲取得日期中的年份的日期字串,
+ *                              this function expects date is format of mm/dd/yyyy or mm/dd/yy or
+ *                                                                      mm-dd-yyyy or mm-dd-yy
+ */
+function getYear(argDate) {
+	var dateSep = getDateSeparator(argDate);
+
+	if (dateSep =='')
+		return 0;
+
+	if(argDate.split(dateSep).length == 3)
+		return argDate.split(dateSep)[2];
+	else
+		return 0;
+}
+
+
+/******** Purpose : 取得日期中的月份字串
+ *  ArgumentsType : getMonth(String argDate)
+ *        Returns : String - 回傳的月份字串
+ *     Parameters :
+ *                  1.argDate - 欲取得日期中的月份的日期字串,
+ *                              this function expects date is format of mm/dd/yyyy or mm/dd/yy or
+ *                                                                      mm-dd-yyyy or mm-dd-yy
+ */
+function getMonth(argDate) {
+	var dateSep = getDateSeparator(argDate);
+
+	if (dateSep =='')
+		return 0;
+
+	if(argDate.split(dateSep).length == 3)
+		return argDate.split(dateSep)[0];
+	else
+		return 0;
+}
+
+/******** Purpose : 取得年月日中的日期字串
+ *  ArgumentsType : getDay(String argDate)
+ *        Returns : String - 回傳年月日中的日期字串
+ *     Parameters :
+ *                  1.argDate - 欲取得年月日中的日期字串,
+ *                              this function expects date is format of mm/dd/yyyy or mm/dd/yy or
+ *                                                                      mm-dd-yyyy or mm-dd-yy
+ */
+function getDay(argDate) {
+	var dateSep = getDateSeparator(argDate);
+
+	if (dateSep =='')
+		return 0;
+
+	if(argDate.split(dateSep).length == 3)
+		return argDate.split(dateSep)[1];
+	else
+		return 0;
+}
+
+
+/******** Purpose : 依據年月判斷年月日中的日是否合法
+ *  ArgumentsType : isProperDay(String argDay, String argMonth, String argYear)
+ *        Returns : Boolean,{true - 年月日中的日是合法 | false - 年月日中的日不合法 }
+ *     Parameters :
+ *                  1.argDay - 欲判斷年月日中的日是否合法的日字串
+ *                  2.argMonth - 欲判斷年月日中的日是否合法的月份字串
+ *                  3.argYear - 欲判斷年月日中的日是否合法的年份字串
+ */
+function isProperDay(argDay, argMonth, argYear) {
+	if ((isWhiteSpace(argDay)) || (argDay == 0))
+		return false;
+
+	if ((argDay > 0) && (argDay < daysInMonth(argMonth, argYear) + 1))
+		return true;
+	else
+		return false;
+}
+
+
+/******** Purpose : 判斷月份是否合法
+ *  ArgumentsType : isProperMonth(String argMonth)
+ *        Returns : Boolean,{true - 月份合法 | false - 月份不合法}
+ *     Parameters :
+ *                  1.argMonth - 欲判斷月份是否合法的月份字串
+ */
+function isProperMonth(argMonth) {
+	if ((isWhiteSpace(argMonth)) || (argMonth == 0))
+		return false;
+
+	if ((argMonth > 0) && (argMonth < 13))
+		return true;
+	else
+		return false;
+}
+
+/******** Purpose : 判斷是否為合法的西元年份
+ *  ArgumentsType : isProperYear(String argYear)
+ *        Returns : Boolean,{true - 年份合法 | false - 年份不合法}
+ *     Parameters :
+ *                  1.argYear - 欲判斷是否為合法的西元年份字串
+ */
+function isProperYear(argYear) {
+	if ((isWhiteSpace(argYear)) || (argYear.toString().length > 4) || (argYear.toString().length == 3))
+		return false;
+
+	switch (argYear.toString().length) {
+		case 1:
+			if (argYear >=0 && argYear < 10)
+				return true;
+			else
+				return false;
+
+		case 2:
+			if (argYear >=0 && argYear < 100)
+				return true;
+			else
+				return false;
+
+		case 4:
+			if (((argYear >=1900) || (argYear >=2000)) && ((argYear < 3000) || (argYear < 2000)))
+				return true;
+			else
+				return false;
+
+		default:
+			return false;
+	}
+}
+
+
+/***********************************************************
+isSomethingSelected()
+This function is passed an object of type redio group or check
+box. It then loops through all options and checks that
+one of them is selected, returning true if so.
+Arguments:
+obj = Reference to the parent object of the group.
+************************************************************/
+function isSomethingSelected( obj ){
+	for (var r=0; r < obj.length; r++){
+		if ( obj[r].checked ) return true;
+	}
+}
+/******** Purpose : 驗證身分證號碼是否正確
+ *  ArgumentsType : validPID(String s,Boolean flag)
+ *        Returns : Boolean,[true:身分證號碼驗證正確,false:身分證號碼驗證不正確]
+ *     Parameters :
+ *                  1.s - 欲執行資料驗證的身分證號碼
+ *                  2.flag - 是否驗證身分證號碼編碼的正確性
+ */
+function validPID(s,flag) {
+	var c, n, i;
+	var t= "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+
+        s= trim(s);
+        c= s.substring(0,1);
+	c= t.indexOf(c.toUpperCase());
+	if((s.length!= 10) || (c<0)) return false;
+
+        if ( flag == true ){
+ 	 n= parseInt(c/10,10)+ c%10*9+ 1;
+	 for(i=1; i<9; i++) n= n+ parseInt(s.substring(i,i+1),10)* (9-i);
+	 n= (10- (n% 10))% 10;
+	 if(n!= parseInt(s.substring(9,10),10)) return false;
+        }
+
+	return true;
+ }
+ 
+/******** Purpose : 驗證身分證號碼是否正確 for 11碼
+ *  ArgumentsType : validPID(String s,Boolean flag)
+ *        Returns : Boolean,[true:身分證號碼驗證正確,false:身分證號碼驗證不正確]
+ *     Parameters :
+ *                  1.s - 欲執行資料驗證的身分證號碼
+ *                  2.flag - 是否驗證身分證號碼編碼的正確性
+ */
+function validPID11(s,flag) {
+	var c, n, i;
+	var t= "ABCDEFGHJKLMNPQRSTUVXYWZIOP";
+        s= trim(s);
+        c= s.substring(0,1);
+
+	c= t.indexOf(c.toUpperCase());	
+	
+	if( c=='-1' ) return true;		
+		
+	if((s.length< 10 && s.length > 11) || (c<0)) return false;
+
+        if ( flag == true ){
+ 	 n= parseInt(c/10,10)+ c%10*9+ 1;
+	 for(i=1; i<9; i++) n= n+ parseInt(s.substring(i,i+1),10)* (9-i);
+	 n= (10- (n% 10))% 10;
+	 if(n!= parseInt(s.substring(9,10),10)) return false;
+        }
+
+	return true;
+ } 
+
+/******** Purpose : 驗證 eMail 帳號是否正確
+validateEmail()
+This function checks that the value of a field is a valid
+SMTP e-mail address ie x@xx.xx
+Arguments:
+obj = Input whose value is to be checked
+Original source:
+http://javascript.internet.com
+Author:
+Sandeep V. Tamhankar (stamhankar@hotmail.com)
+Note: Work in progress = validate SMTP OR Notes Canonical
+************************************************************/
+function ValidateEmail( emailStr ) {
+	var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
+	var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
+	if ( !reg1.test( emailStr ) && reg2.test( emailStr ) )
+		return true;
+	else
+	 	return false;
+}
+
+/******** Purpose : 驗證 eMail 帳號是否正確 ( FULL )
+ *  ArgumentsType : ValidateEmail(String emailStr)
+ *        Returns : String "#1,#2" [#1 --- "1":eMail帳號驗證正確,"0":eMail帳號驗證不正確]
+ *				   [#2 --- 回傳錯誤 message]
+ *     Parameters :
+ *                  1.emailStr - 欲執行資料驗證的eMail帳號
+ */
+ function ValidateEmailFull ( emailStr ) {
+ 	errorMessage = ""; // 全域變數 clear
+	/* Pattern to check if the entered e-mail address fits the user@domain format. */
+	var emailPat=/^(.+)@(.+)$/;
+
+	/* Pattern to check for special characters we don't want, including ( ) < > @ , ; : \ " . [ ] */
+	var specialChars="\\(\\)<>@,;:\\\\\\\"\\.\\[\\]";
+
+	/* The following string represents the range of characters allowed in a username or domainname */
+	var validChars="\[^\\s" + specialChars + "\]";
+
+	/* The following pattern applies if the "user" is a quoted string, E.g. "jiminy cricket"@disney.com */
+	var quotedUser="(\"[^\"]*\")";
+
+	/* Pattern for domains that are IP addresses, rather than symbolic names. E.g. joe@[123.124.233.4] is a legal e-mail address. NOTE: The square brackets are required. */
+	var ipDomainPat=/^\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\]$/;
+
+	/* The following string represents an atom (basically a series of non-special characters.) */
+	var atom=validChars + '+';
+
+	/* The following string represents one word in the typical username. For example, in john.doe@themorgue.hell, john and doe are words */
+	var word="(" + atom + "|" + quotedUser + ")";
+
+	// The following pattern describes the structure of the user
+	var userPat=new RegExp("^" + word + "(\\." + word + ")*$");
+
+	/* The following pattern describes the structure of a normal symbolic domain, as opposed to ipDomainPat, shown above. */
+	var domainPat=new RegExp("^" + atom + "(\\." + atom +")*$");
+
+	/* Finally, let's start trying to figure out if the supplied address is valid. */
+
+	/* Begin with the coarse pattern to simply break up user@domain into different pieces that are easy to analyze. */
+
+	var matchArray=emailStr.match(emailPat);
+	if (matchArray==null) {
+		/* Too many/few @'s or something; basically, this address doesn't even fit the general mould of a valid e-mail address. */
+		//alert("Email address seems incorrect (check @ and .'s)")
+		errorMessage = "Email address seems incorrect (check @ and .'s)";
+	return false;
+	}
+	var user=matchArray[1];
+	var domain=matchArray[2];
+
+	// See if "user" is valid
+	if (user.match(userPat)==null) {
+		// user is not valid
+		//alert("The username doesn't seem to be valid.")
+		errorMessage = "The username doesn't seem to be valid.";
+	return false;
+	}
+
+
+	/* if the e-mail address is at an IP address make sure the IP address is valid. */
+	var IPArray=domain.match(ipDomainPat);
+	if (IPArray!=null) {
+		// this is an IP address
+		for (var i=1;i<=4;i++) {
+			if (IPArray[i]>255) {
+				//alert("Destination IP address is invalid!")
+				errorMessage = "Destination IP address is invalid!";
+				return false;
+			}
+		}
+	return true;
+	}
+
+	// Domain is symbolic name
+	var domainArray=domain.match(domainPat);
+		if (domainArray==null) {
+		//alert("The domain name doesn't seem to be valid.")
+		errorMessage = "The domain name doesn't seem to be valid.";
+	return false;
+	}
+
+	/* domain name seems valid, but now make sure that it ends in a three-letter word (like com, edu, gov) or a two-letter word, representing country (uk, nl), and that there's a hostname preceding the domain or country. */
+
+	/* Now we need to break up the domain to get a count of how many atoms it consists of. */
+	var atomPat=new RegExp(atom,"g");
+	var domArr=domain.match(atomPat);
+	var len=domArr.length;
+	if (domArr[domArr.length-1].length<2 || domArr[domArr.length-1].length>3) {
+		// the address must end in a two letter or three letter word.
+		//alert("The address must end in a three-letter domain, or two letter country.")
+		errorMessage = "The address must end in a three-letter domain, or two letter country.";
+		return false;
+	}
+
+	// Make sure there's a host name preceding the domain.
+	if (len<2) {
+		//alert("This address is missing a hostname!")
+		errorMessage = "This address is missing a hostname!";
+	return false;
+	}
+
+	// If we've gotten this far, everything's valid!
+	//alert(emailStr + ' seems to be a valid address!');
+return true; // 正確的 eMail 帳號
+}
+
+/***********************************************************
+locateFileUpload()
+Returns a handle to the file upload control on a form.
+Used to get around the fact that there is no consistent
+way to refer to the element cross-browser.
+***********************************************************/
+function locateFileUpload( f ) {
+ for(var i = 0; i < f.elements.length; i ++)
+  if( f.elements[i].type=='file' ){
+  return f.elements[i];
+ }
+}
+
+/***********************************************************
+validateFileType()
+This function checks that the type of file being uploaded
+is allowed
+Arguments:
+obj = The File Upload control.
+fTyp = Allowed file types
+************************************************************/
+function validateFileType( obj, fTyp ) {
+dots = obj.value.split(".");
+fType = "." + dots[dots.length-1];
+if ( fTyp != null && fTyp.toUpperCase().indexOf(fType.toUpperCase()) == -1 ) return false;
+return true;
+}
+/***********************************************************
+validateFileLimit()
+This function checks that the value in a file upload
+Arguments:
+obj = The File Upload control
+cur = Current number of file attachments
+max = Limit on allowed files
+************************************************************/
+function validateFileLimit( obj, cur, max ) {
+if ( cur >= max ) return false;
+return true;
+}
+
+/***********************************************************
+OnFailure()
+This function returns the failure message to the user and
+sets focus on the input in question.
+Arguments:
+obj = Input element on which to return focus
+lbl = Field Label to prepend on to the message
+msg = Array value for message to give the user
+************************************************************/
+function OnFailure( obj, lbl, msg , bAlert ){
+	lbl = '[' + lbl + ']';
+	var msgs = new Array();
+	msgs["text"] = " 是一個必需輸入的欄位. \n\n請輸入一個值.";
+		msgs["email"] = " 是一個電子信箱欄位. \n\n請輸入一個正確的信件地址.\n\n" + errorMessage;
+		msgs["pid"] = " 是一個身分證欄位. \n\n請輸入正確合法的身分證號碼.";
+		msgs["num"] = " is a numeric field. \n\nPlease enter a valid number.";
+		msgs["date"] = " is a date field. \n\nPlease enter a valid date.";
+		msgs["regexp"] = " 是一個必需輸入的欄位. \n\n請輸入正確的資料.";
+		msgs["str"] = " 是一個字串型態的欄位. \n\n請輸入正確的值.";
+		msgs["cstr"] = " 是一個中文字串型態的欄位. \n\n請輸入正確的值.";// added by Richard 2005/11/24
+		msgs["date"] = " 是一個日期型態的欄位. \n\n請輸入正確的日期.";
+		msgs["formula"] = " 是需輸入的欄位. \n\n請輸入正確的資料.";
+
+	msgs["textarea"] = " 是一個必需輸入的欄位. \n\n請輸入一個值.";
+	msgs["select-one"] = " 是一個必需選擇的欄位. \n\n請選擇一個值.";
+	msgs["select-multiple"] = " 是一個必需選擇的欄位. \n\n請至少選擇一個值.";
+	msgs["checkbox"] = " 是一個必需勾選的欄位. \n\n請至少勾選一個值.";
+	msgs["radio"] = " 是一個必需點選的欄位. \n\n請點選一個值.";
+	msgs["file"] = " 是一個必需上載檔案的欄位. \n\n請選擇一個檔案.";
+		msgs["fileType"] = " 選擇的檔案的型態錯誤. \n\n請選擇正確的檔案型態.";
+		msgs["fileLimit"] = " is a limited file upload. \n\nPlease reduce number of attachment(s) first.";
+
+	msgs["default-SI-checkbox"] = msgs["checkbox"];
+	msgs["default-SI-radio"] = msgs["radio"];
+	msgs["default-MI-checkbox"] = msgs["checkbox"];
+	msgs["default-MI-radio"] = msgs["radio"];
+	msgs["cid"] = " 是一個統一編號欄位. \n\n請輸入正確合法的統一編號欄位.";
+	msgs["pcid"] = "\n\n請輸入正確合法的身份證欄位.";
+
+	// ["Type","lower","upper"]
+
+	term = "";
+	if(msg[1] || msg[2]){ //upper/lower bound ranges have been specified
+		if(msg[1] && msg[2]){//range
+			// term = ( msg[0] == "date" )? " ("+msg[3]+")" : term;
+			term = ( msg[0] == "str" )	?	" 字串長度大小必需介於 " : term;
+			term = ( msg[0] == "cstr" )	?	" 字串長度大小必需介於 " : term;// added by Richard 2005/11/24
+			term = ( msg[0] == "num" ) 	?	" 數字長度大小必需介於 " : term;
+			term = ( msg[0] == "int" ) 	?	" 整數的值必需介於 " : term;			
+			term = ( msg[0] == "+int" ) 	?	" 正整數的值必需介於 " : term;			
+			term = ( msg[0] == "float" ) 	?	" 浮點數的值必需介於 " : term;			
+			term = ( msg[0] == "+float" ) 	?	" 正浮點數的值必需介於 " : term;			
+			
+			if ( term == "" ) validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]));
+			else validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]) + term +  msg[1] + " 和 " + msg[2] + " 之間");
+
+		} else if (msg[1]) {//lower bound
+			// term = ( msg[0] == "number" ) ? " greater than " : " (" + msg[3] + ") after ";
+			term = ( msg[0] == "regexp" ) ?	" 輸入資料的格式必需符合正規化 pattern : " : term;
+			term = ( msg[0] == "str" )	?	" 字串長度必需大於 " : term;
+			term = ( msg[0] == "cstr" )	?	" 字串長度必需大於 " : term;// added by Richard 2005/11/24
+			term = ( msg[0] == "num" )	?	" 數字長度必需大於 " : term;
+			term = ( msg[0] == "int" )	?	" 整數的值必需大於 " : term;
+			term = ( msg[0] == "+int" )	?	" 正整數的值必需大於 " : term;
+			term = ( msg[0] == "float" )	?	" 浮點數的值必需大於 " : term;
+			term = ( msg[0] == "+float" )	?	" 正浮點數的值必需大於 " : term;
+			term = ( msg[0] == "date" )	?	" 日期格式 : " : term;
+			term = ( msg[0] == "file" )	?	" 檔案格式必需為 : " : term;
+
+			if ( term == "" ) validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]));
+			else validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]) + term + msg[1]);
+
+		} else {//upper bound
+			//term = ( msg[0] == "number" )? " less than " : " (" + msg[3] + ") before ";
+			term = ( msg[0] == "str" ) 	?	" 字串長度必需小於 " : term;
+			term = ( msg[0] == "cstr" ) 	?	" 字串長度必需小於 " : term;// added by Richard 2005/11/24
+			term = ( msg[0] == "num" ) 	?	" 數字長度必需小於 " : term;
+			term = ( msg[0] == "int" )	?	" 整數的值必需小於 " : term;
+			term = ( msg[0] == "+int" )	?	" 正整數的值必需小於 " : term;
+			term = ( msg[0] == "float" )	?	" 浮點數的值必需小於 " : term;
+			term = ( msg[0] == "+float" )	?	" 正浮點數的值必需小於 " : term;
+			
+			if ( term == "" ) validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]));
+			else validateMessage = (lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]) + term + msg[2]);
+		}
+	} else {//no range given
+		validateMessage = lbl + (msgs[msg[0]]==null ? '' : msgs[msg[0]]);		
+	}
+	
+	if(bAlert) {
+		alert( validateMessage );
+	}
+	
+	//FV_Intimation_Obj = obj;
+	//FV_Intimation_IntervalObj = setInterval('intimationObj()', 300);
+	obj.focus();	
+
+	try{
+		obj.select();
+	}catch(e){}
+	
+	return false;
+}
+
+function intimationObj(){
+	if(FV_Intimation_Count++ % 2 == 0){
+		FV_Intimation_Obj.style.background = '#FF0066';
+		FV_Intimation_Obj.style.border = 'solid #FF0066 1px';
+	}else{
+		FV_Intimation_Obj.style.background = '';
+		FV_Intimation_Obj.style.border = '';
+	}
+
+	if(FV_Intimation_Count > 5){
+		FV_Intimation_Count = 0;
+		clearInterval(FV_Intimation_IntervalObj);
+	}
+}
+
+// 20030123 for martin created
+function markNeedField(form, bMark){
+    var className = "";
+    for(var i=0; i<form.elements.length; i++){
+        var element = form.elements[i];
+        var elementID = eval('element.' + FV_Valid_ID);
+
+        className = "";
+        if(elementID.indexOf('#mandatory') != -1){
+            className = 'ValidField';
+        }
+        if(elementID.indexOf('#true') != -1){
+            className = "RequiredField";
+        }
+
+        if(className != ""){
+            if(eval("form."+element.name).length>0){
+                eval("form."+element.name+"[0]").className = bMark ? className : "";
+            }else{
+                element.className = bMark ? className : "";
+            }
+        }
+    }
+}
+
+//*************************************
+//    計算字串有幾個 Bytes
+//*************************************
+function computeStrLength(strData){
+	var strlength = 0;
+	var ASCIICode = "";
+	
+	for(i=0; i<strData.length; i++){
+		ASCIICode = strData.charCodeAt(i);
+		if(ASCIICode >= 128){
+			strlength = strlength + 2;
+		}else{
+			strlength = strlength + 1;
+		}
+	}
+	
+	return strlength;
+}	
+
+function checkCustomerID(obj){
+	if(obj != null){
+		var id = obj.value.toUpperCase();
+		if(id!='' && 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(id.substr(0,1))>=0 && id.length==10){
+			id += '0';
+		}
+		obj.value = id;
+	}
+}
+
+/******** Purpose : 驗證統一編號是否正確
+ *  ArgumentsType : validCID(String s,Boolean flag)
+ *  Returns : Boolean,[true:身分證號碼驗證正確,false:身分證號碼驗證不正確]
+ *  Parameters :
+ *                  1.s - 欲執行資料驗證的統一編號
+ *                  2.flag - 是否驗證統一編號的正確性
+ */
+function validCID(s,flag) {	
+	var pa=[1,2,1,2,1,2,4,1];        
+        var nSum=0;
+        
+        s= trim(s);            
+	if(s.length!= 8) return false;
+
+        if ( flag == true ){
+ 	 	for(i=0;i<s.length;i++){
+    		var tp=parseInt(s.substr(i,1))*pa[i];
+    		//如果公司統編的第 7 位是 7 時, 會造成相加結果為 10 的特殊情況, 所以直接以 1 代替進行加總.
+                var aSum = Math.floor((tp/10)+tp%10);
+                nSum += (aSum == 10)? 1 : aSum;                
+  		}
+  		if(nSum % 10 != 0) return false;
+        }
+	return true;
+}
+
+/**
+ * 結合客戶身分證號和統一編號檢查
+ * Parameters:
+ * 1. s - 輸入參數
+ * 2. p_flag - 是否驗證身分證的正確性
+ * 3. c_flag - 是否驗證統一編號的正確性
+ */
+function vaildPCID(s, p_flag, c_flag) {
+	var p_result = validPID(s, p_flag);
+	var c_result = validCID(s, c_flag);
+	if(p_result==false && c_result==false) {
+		return false;
+	}
+	return true;
+}
+
+
+/**
+ * 結合客戶身分證號和統一編號檢查 for 11碼
+ * Parameters:
+ * 1. s - 輸入參數
+ * 2. p_flag - 是否驗證身分證的正確性
+ * 3. c_flag - 是否驗證統一編號的正確性
+ */
+function vaildPCID11(s, p_flag, c_flag) {
+	var p_result = validPID11(s, p_flag);
+	var c_result = validCID(s, c_flag);
+	if(p_result==false && c_result==false) {
+		return false;
+	}
+	return true;
+}

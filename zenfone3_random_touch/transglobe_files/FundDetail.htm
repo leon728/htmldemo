@@ -1,0 +1,633 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0123)https://www.transglobe.com.tw/CSIS/PolicyInq/FundDetail.jsp?PolicyNo=V019126690&Function=FundDetail&IsInvestmentPolicy=true -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
+
+<title>目前各基金明細及投資損益查詢</title>
+<link rel="stylesheet" type="text/css" href="FundDetail_data/theme2.css">
+<link rel="stylesheet" type="text/css" href="FundDetail_data/graph0.css">
+<link rel="stylesheet" type="text/css" href="FundDetail_data/color0.css">
+<link rel="stylesheet" type="text/css" href="FundDetail_data/custom.css">
+<script language="JavaScript" src="FundDetail_data/Common.txt" type="text/javascript"></script><style></style>
+<script language="JavaScript" type="text/javascript">
+<!--
+var oToolBar = "";
+var iToolBar = 0;
+var iInterval = "";
+var strFunctionKeyOnlyOnePageAndNoData = "E";
+var strWindowProperties = "width=700,height=450,resizable=yes,scrollbars=yes,top=50,left=50";
+
+function OnLoad()
+{
+	var funckeyDef = '[列印|printpage],';
+	WindowOnLoadCommon( document.title , '' , funckeyDef,'' ) ;	
+	window.status = "";
+	enableAll();
+}
+
+function printpage()
+{
+   alert("列印時,請選擇為橫印,謝謝!");
+   window.print();
+}
+
+
+function objectFocus(object){
+	try{
+		object.focus();
+	}catch(e){}
+}
+
+//R10373 BRD5-1 第九項 新增舊版「投資交易明細」內容網頁   add by John(shiyang)
+/*
+函數名稱:	openWindow()
+函數功能:	當 查詢平均化淨值 / 匯率 功能鍵被點擊時,本函數會被執行
+傳入參數:	無
+傳回值:	無
+修改紀錄:	修改日期	修改者	修   改   摘   要
+		---------	----------	-----------------------------------------
+*/
+function openWindow()
+{
+		var winClient = window.open("FundDetailTranditional.jsp?PolicyNo=V019126690&txtPolicySourceCode=4","FundDetailTrandition",strWindowProperties);
+		objectFocus(winClient);
+}
+function openConfigWindow()
+{
+		var winClient = window.open("FundDetailH_Edit.jsp?PolicyNo=V019126690","FundDetailH_Edit",strWindowProperties);
+		objectFocus(winClient);
+}
+
+//-->
+</script>
+
+
+<style type="text/css">
+	.titleStyle {
+		text-align: center;
+		font-weight: bold;
+		font-size: 18px;
+		color: blue;
+		width: 100%;
+	}
+	
+	.pageHeader {
+		font-weight: bold;
+		size=12px;
+	}
+	.dataTable {
+ 		width: 1120px;
+	}
+	.dataHeader {
+ 		font-size: 12px;
+	}
+	.dataField {
+ 		font-size: 12px;
+	}
+	
+	.noteMsgNormal {
+		width: 1120px;
+		font-size: 13px; 
+		text-align: left;
+	}
+	
+	.noteMsg1 {
+		width: 1120px;
+		font-size: 12px; 
+		line-height: 16px; 
+		text-align: left;
+		color: #666666; 
+		font-family: 新細明體 ;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+</style>
+<script src="FundDetail_data/gws_004.txt" id="dynaGWS_require" charset="UTF-8" type="text/javascript"></script><script type="text/javascript" charset="utf-8" src="FundDetail_data/gws.js"></script><script type="text/javascript" charset="utf-8" src="FundDetail_data/gws_003.txt"></script>
+<script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_005.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_009.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_008.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_006.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/trigger.html"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_010.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/wfs.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_007.txt"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/candidate.html"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/wime.html"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/keyboard-changjie.html"></script><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/keyboard-phonetic.html"></script><link type="text/css" href="FundDetail_data/gws.css" media="all" rel="stylesheet" id="dcw-style"><link type="text/css" href="FundDetail_data/untitle.css" media="all" rel="stylesheet" id="dcw-MingLiuID"><link type="text/css" href="FundDetail_data/untitle.css" media="all" rel="stylesheet" id="dcw-wimeCSS"><script type="text/javascript" charset="utf-8" async="" src="FundDetail_data/gws_002.js"></script></head>
+<body marginwidth="0" marginheight="0">
+
+<div style="width: 100%;" align="center">
+
+	<span class="titleStyle">目前各基金明細及投資損益查詢</span>
+	<table class="dataTable" border="0">
+		<tbody>
+			<tr>
+				<td align="left" width="40%">
+					<input value="列印本頁" onclick="printpage();" class="dcw-trigger-class" type="button">
+				</td>
+				<td>&nbsp;</td>
+				<td align="right" width="40%">
+					<span class="pageHeader">查詢日期時間：107/03/17</span>
+				</td>
+			</tr>
+			<tr><td colspan="3">&nbsp;</td></tr>
+			<tr>
+				<td style="vertical-align: top;" align="left">
+					<span class="pageHeader">保單號碼：V019126690</span>
+				</td>
+				<td>&nbsp;</td>
+				<td align="right">
+					
+					
+				</td>
+			</tr>
+			<tr>
+				<td align="left">
+					<span class="pageHeader">要 保 人：張正佳</span>
+				</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="left">
+					<span class="pageHeader">被保險人：張正佳</span>
+				</td>
+				<td></td>
+				<td align="right">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="left">
+					<span class="pageHeader">Email：leon728@gmail.com</span>
+				</td>
+				<td></td>
+				<td align="right">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p>	
+									
+			</p><div class="noteMsgNormal" style="font-size:16px; font-weight:bold; background-color:#E8F2FE; margin-bottom:6px;">
+				<div style="margin-bottom:3px;">您的投資風險屬性定位：積極型</div>
+																					
+			</div>
+			<!--  <div style='font-size:18px;margin-bottom:10px;text-decoration:underline; text-weight:bold;color:#0070BD;'>風險屬性：</div> -->								
+	 
+	<div class="noteMsgNormal">
+		<b>保單投資概況:</b>(本表主要是提供保戶瞭解本保單之綜合投資績效概況)	
+	</div>
+ 	
+	
+	<table class="dataTable" border="1">
+		<thead class="queryHead">
+			<tr align="center">
+				
+					
+					
+					
+						<td class="dataHeader">&nbsp;</td>
+						<td class="dataHeader">參考保險費<br>(A)</td>
+						<td class="dataHeader">彈性保險費<br>(B)</td>
+						<td class="dataHeader">前置費用<br>(C)</td>
+						<td class="dataHeader">保險成本<br>(D)</td>
+						<td class="dataHeader">保單維護/管理費<br>(E)</td>
+						<td class="dataHeader">申購手續費<br>(F)</td>
+						<td class="dataHeader">轉換費用<br>(G)</td>
+						<td class="dataHeader">變現價差<br>(H)</td>
+						<td class="dataHeader">後置費用<br>(I)</td>
+						<td class="dataHeader">部份提領淨額<br>(J)</td>
+						<td class="dataHeader">保單投資成本<br>(K)</td>
+						<td class="dataHeader">保單投資損益<br>(L)</td>
+					
+					
+					
+					
+				
+			</tr>
+		</thead>
+		<tbody class="queryBody">
+			<tr align="right">
+			
+				<td class="dataField" align="left">累計交易金額</td>
+				
+				
+					
+					
+					
+						<td class="dataField">274,363</td>
+						<td class="dataField">54,600</td>
+						<td class="dataField">46,014</td>
+						<td class="dataField">51,201.5</td>
+						<td class="dataField">11,500</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+						<td class="dataField">0</td>
+					
+					
+					
+					
+				
+				
+				<td class="dataField">0</td>
+				<td class="dataField">0</td>
+				<td class="dataField">282,949.41</td>
+				<td class="dataField">68,444.09</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- R10373 BRD5-1 第一項（修正首期淨保險費延投利息，保單帳戶價值，保單累計投資報酬率）和第二項（修正計算說明）的呈現方式   update by John(shiyang)-->
+	<div class="noteMsgNormal" style="margin-top: 10px;">
+		
+			
+			
+			
+			<table class="dataTable" border="1">
+				<thead class="queryHead">
+				<tr align="center">
+					<td class="dataField" rowspan="2">首期淨保險費延投利息<br>( 依條款約定產生之利息 )<br>(M)</td>
+					<td class="dataField" rowspan="2">保單帳戶價值 <br>(N)</td>
+					<td class="dataField" rowspan="2">保單累計投資報酬率 <br>(O)<!-- =(L)/(K)*% --></td>
+					<td class="dataField">停利投報率</td>
+					<td class="dataField">停利通知日期</td>					
+				</tr>
+				<tr align="center">
+					<td class="dataField">停損投報率</td>
+					<td class="dataField">停損通知日期</td>
+				</tr>
+				</thead>
+				<tbody class="queryBody">
+				<tr align="center">
+				
+					<td class="dataField" rowspan="2">NT$ 0.41 </td>
+					<td class="dataField" rowspan="2">NT$ 288,692 </td>
+					<td class="dataField" rowspan="2">24.19 %</td>
+					<td class="dataField">尚未設定</td>
+					<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="center">
+				
+					<td class="dataField">尚未設定</td>
+					<td class="dataField">&nbsp;</td>
+				</tr>
+				</tbody>
+			</table>
+			    <br>
+				計算說明：保單投資成本(K)=(A)+(B)+(M)-(C)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保單投資損益(L)=(D)+(E)+(F)+(G)+(H)+(I)+(J)+(N)-(K)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保單累計投資報酬率(O)=[(L)÷(K)]×100%
+			
+			
+		
+		
+		<!-- R10373 BRD5-1 第三項 身故保險金額 將移至 保單資料查詢 頁面顯示，故刪除此欄位  del by John(shiyang) -->
+		
+		
+	</div>
+	
+	<br>
+	
+	<div class="noteMsgNormal">
+	<table><tbody><tr><td>
+	<!-- R10373 BRD5-1 第四項 修改 目前各投資標的帳戶價值明細 為 目前各投資標的累計帳戶價值明細   update by John(shiyang) -->
+			<b>目前各投資標的累計帳戶價值明細:</b>(本明細主要在於呈現「各投資標的」之績效，以作為日後調整投資標的之參考)
+			<input id="btnOpen" value="查詢平均化淨值/匯率" onclick="openWindow()" name="btnOpen" class="dcw-trigger-class" type="button">
+	
+			<input id="btnOpenConfig" value="停利停損通知設定" onclick="location.href='FundDetailH_Edit.jsp?PolicyNo=V019126690'" name="btnOpenConfig" class="dcw-trigger-class" type="button">
+			
+		<br>
+			
+			<b>匯兌日：</b>107/03/15
+			
+			
+	</td></tr></tbody></table>
+		
+	</div>
+	<form name="formDetail4" action="https://www.transglobe.com.tw/CSIS/PolicyInq/FundDetail.jsp?PolicyNo=V019126690&amp;Function=FundDetail&amp;IsInvestmentPolicy=true" method="Post"> 
+	<table class="dataTable" id="TableDetail" border="1">
+		<thead class="queryHead">
+			<tr align="center">
+				<td class="dataHeader" rowspan="2">(投資標的代碼)中文名稱</td>
+				<td class="dataHeader" rowspan="2">目前投資分配比例</td>
+				<td class="dataHeader" rowspan="2">投資標的風險屬性</td>
+				<td class="dataHeader" rowspan="2">幣別</td>
+				<td class="dataHeader" rowspan="2">淨投資總額<br>(S)</td>
+				<td class="dataHeader">轉入總額<br>(T)</td>
+				<td class="dataHeader">贖回總額<br>(V)</td>
+				<td class="dataHeader">評價日</td>
+				<td class="dataHeader">持有單位數</td>
+				<td class="dataHeader" rowspan="2">帳戶價值<br>(X)</td>
+				<td class="dataHeader" rowspan="2">參考損益<br>(Y)</td>
+				<td class="dataHeader" rowspan="2">參考投報率<br>(Z)</td>
+				<td class="dataHeader">停利投報率</td>
+				<!-- R10373 BRD5-1 第五項 單位價 改為 原幣別單位價  update by John(shiyang) -->
+				<td class="dataHeader">停利通知日期</td>
+			</tr>
+			<tr align="center">
+				<td class="dataHeader">轉出總額<br>(U)</td>
+				<td class="dataHeader">已扣費用<br>(W)</td>
+				<td class="dataHeader">參考匯率</td>
+				<td class="dataHeader">原幣別單位價</td>
+				<td class="dataHeader">停損投報率</td>
+				<td class="dataHeader">停損通知日期</td>
+			</tr>	
+		</thead>	
+			
+			
+		<tbody class="queryBody">
+		
+		
+		
+		
+			
+			
+			
+			
+			
+			
+			
+				
+				
+					
+				
+				
+				
+				
+				
+ 				
+				
+				
+			
+		
+			<tr align="right">
+			
+				<td class="dataField" rowspan="2" align="left" width="100px" height="30px">
+					
+					
+						<a target="_blank" href="http://transglobe.moneydj.com/w/CustFundIDMap.djhtm?FundID=ACMIT&amp;File=02">聯博－國際科技基金Ａ股美元</a>
+					ACMIT
+					
+				</td>
+				
+				<td class="dataField" rowspan="2" width="30px">25%</td>
+				<td class="dataField" rowspan="2" width="30px">&nbsp;RR4</td>
+				<td class="dataField" rowspan="2" width="25px">美元</td>
+				<td class="dataField" rowspan="2">37,964.00</td>
+				<td class="dataField">22,766.00</td>
+				<td class="dataField">0.00</td>
+				<td class="dataField">
+						
+							107/03/14
+						
+						
+						
+					</td>
+				<td class="dataField">8.2869</td>
+				<td class="dataField" rowspan="2">79,898.00</td>
+				<td class="dataField" rowspan="2">27,373.00</td>
+				<td class="dataField" rowspan="2">45.07%</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="right">
+				
+				<td class="dataField">0.00</td>				
+				<td class="dataField">8,205.00</td>
+				<td class="dataField">29.1380</td>
+				<td class="dataField">330.8900</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td> 
+			</tr>
+              
+			
+		
+			
+			
+			
+			
+			
+			
+			
+				
+					
+				
+				
+				
+				
+				
+				
+ 				
+				
+				
+			
+		
+			<tr align="right">
+			
+				<td class="dataField" rowspan="2" align="left" width="100px" height="30px">
+					
+					
+						<a target="_blank" href="http://transglobe.moneydj.com/w/CustFundIDMap.djhtm?FundID=JPMTG&amp;File=02">摩根全球α基金</a>
+					JPMTG
+					
+				</td>
+				
+				<td class="dataField" rowspan="2" width="30px">25%</td>
+				<td class="dataField" rowspan="2" width="30px">&nbsp;RR3</td>
+				<td class="dataField" rowspan="2" width="25px">台幣</td>
+				<td class="dataField" rowspan="2">37,954.00</td>
+				<td class="dataField">16,243.00</td>
+				<td class="dataField">0.00</td>
+				<td class="dataField">
+						
+							107/03/13
+						
+						
+						
+					</td>
+				<td class="dataField">2,999.1046</td>
+				<td class="dataField" rowspan="2">56,443.00</td>
+				<td class="dataField" rowspan="2">7,773.00</td>
+				<td class="dataField" rowspan="2">14.34%</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="right">
+				
+				<td class="dataField">0.00</td>				
+				<td class="dataField">5,527.00</td>
+				<td class="dataField">1.0000</td>
+				<td class="dataField">18.8200</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td> 
+			</tr>
+              
+			
+		
+			
+			
+			
+			
+			
+			
+			
+				
+				
+					
+				
+				
+				
+				
+				
+ 				
+				
+				
+			
+		
+			<tr align="right">
+			
+				<td class="dataField" rowspan="2" align="left" width="100px" height="30px">
+					
+					
+						<a target="_blank" href="http://transglobe.moneydj.com/w/CustFundIDMap.djhtm?FundID=RCMOI&amp;File=02">安聯東方入息基金－Ａ配息類股</a>
+					RCMOI
+					
+				</td>
+				
+				<td class="dataField" rowspan="2" width="30px">20%</td>
+				<td class="dataField" rowspan="2" width="30px">&nbsp;RR4</td>
+				<td class="dataField" rowspan="2" width="25px">美元</td>
+				<td class="dataField" rowspan="2">31,691.00</td>
+				<td class="dataField">45,658.00</td>
+				<td class="dataField">0.00</td>
+				<td class="dataField">
+						
+							107/03/14
+						
+						
+						
+					</td>
+				<td class="dataField">22.1212</td>
+				<td class="dataField" rowspan="2">85,992.00</td>
+				<td class="dataField" rowspan="2">20,044.00</td>
+				<td class="dataField" rowspan="2">25.91%</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="right">
+				
+				<td class="dataField">0.00</td>				
+				<td class="dataField">11,401.00</td>
+				<td class="dataField">29.1380</td>
+				<td class="dataField">133.4100</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td> 
+			</tr>
+              
+			
+		
+			
+			
+			
+			
+			
+			
+			
+				
+				
+					
+				
+				
+				
+				
+				
+ 				
+				
+				
+			
+		
+			<tr align="right">
+			
+				<td class="dataField" rowspan="2" align="left" width="100px" height="30px">
+					
+					
+						<a target="_blank" href="http://transglobe.moneydj.com/w/CustFundIDMap.djhtm?FundID=UBSBC&amp;File=02">瑞銀盧森堡生化股票基金（美元）　　</a>
+					UBSBC
+					
+				</td>
+				
+				<td class="dataField" rowspan="2" width="30px">30%</td>
+				<td class="dataField" rowspan="2" width="30px">&nbsp;RR4</td>
+				<td class="dataField" rowspan="2" width="25px">美元</td>
+				<td class="dataField" rowspan="2">72,046.00</td>
+				<td class="dataField">51,853.00</td>
+				<td class="dataField">0.00</td>
+				<td class="dataField">
+						
+							107/03/13
+						
+						
+						
+					</td>
+				<td class="dataField">3.6439</td>
+				<td class="dataField" rowspan="2">66,359.00</td>
+				<td class="dataField" rowspan="2">18,147.00</td>
+				<td class="dataField" rowspan="2">14.65%</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td>
+				</tr>
+				<tr align="right">
+				
+				<td class="dataField">65,226.00</td>				
+				<td class="dataField">10,461.00</td>
+				<td class="dataField">29.1380</td>
+				<td class="dataField">624.9900</td>
+				<td class="dataField">尚未設定</td>
+				<td class="dataField">&nbsp;</td> 
+			</tr>
+              
+			
+		
+		
+			<tr>
+				<td class="dataField">合計</td>
+				<td class="dataField" colspan="7">&nbsp;</td>
+				<td style="text-align: right;" class="dataField">288,692.00</td>
+				<td class="dataField" colspan="4">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+	</form>
+	<div class="noteMsgNormal" style="margin-top: 10px;">
+		<!-- R10373 BRD5-1 第七項 修改 投資總額 為 淨投資總額 update by John(shiyang) -->
+		(註:本表僅呈現仍持有單位數或投資分配比例之投資標的，故各投資標的之「淨投資總額」加總不一定等於「保單投資成本」)<br>
+		<!-- R10373 BRD5-1 第八項 計算說明 與 附註說明 對調，並修改 計算說明 的呈現方式  update by John(shiyang) -->
+		計算說明:參考損益(Y)=(U)+(V)+(W)+(X)-(S)-(T)<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;參考投報率(Z)={(Y)÷[(S)+(T)]}×100%<br>
+		<!-- R10373 BRD5-1 第六項 修正 欄位說明  update by John(shiyang) -->
+		欄位說明：「淨投資總額」為所繳總保費扣除前置費用及不足額並加上首期延投利息；<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;「已扣費用」內含保險及投資相關費用，但不包括不足額與贖回所產生的後置費用及變現價差。<br>
+		標的說明：當該「投資標的」屬於特定週期交易者(例：SVSA、BAY80)，其「帳戶價值」將包含「暫存帳戶」之「帳戶價值」。<br>
+		
+	</div>
+	
+	<div class="noteMsgNormal">
+		若您的『投資記錄』之投資明細說明欄內容為<u>基金交易中</u>，則本頁之各項明細將不會計算該筆記錄；需待該筆交易完成後才會併入計算於本頁之各項明細內。
+	</div>
+	
+	<div class="noteMsg1">
+		※本資料僅供參考，其實際內容仍應以保單內容為準。<br>
+		※提醒您：因各投資標的之屬性不同，可能會有費用、報價(買/賣價不同)或法令規範的差異，詳細說明歡迎至本公司網站 (<a href="http://www.transglobe.com.tw/" target="_blank">http://www.transglobe.com.tw</a>)
+		「投資型商品專區」閱讀。您亦可洽詢
+		<br>&nbsp;&nbsp;&nbsp;&nbsp;您的保單服務人員或電洽本公司客戶服務中心 (0800-000-662)，謝謝您。
+	</div>
+	<div class="noteMsg1" style="color: red;">
+		※短線交易：為維護您的權益，有關
+		<span style="text-decoration:underline; font-weight: bolder;">
+			短線交易相關規定應依各基金公司最新公開說明書規定辦理。 基金公司如認為任何投資者屬於基金之短線交易人士，可保留限制或拒絕受理</span><br>
+			&nbsp;&nbsp;&nbsp;
+		<span style="text-decoration:underline; font-weight: bolder;">
+			該等投資人所提出之基金申購或轉換申請之權利。本公司對於涉及違反基金短線交易限制天數規定之申請案件，將可能取消或拒絕該筆交易之申請。
+		</span>因各基金之短線交易限制<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;天數不同(7~90天)，
+		<span style="text-decoration:underline; font-weight: bolder;">
+			若您上次交易距本次交易間之天數未達90天以上者，請您於交易前務必參閱各基金之短線交易規定
+		</span>
+		，以免發生違反短線交易限制而影響您的投資時效及權益。
+	</div>
+
+</div>
+
+&nbsp;<p>
+&nbsp;</p><p>
+
+
+</p><script type="text/javascript" charset="utf-8" src="FundDetail_data/gws_002.txt"></script></body></html>

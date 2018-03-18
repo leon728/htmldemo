@@ -1,0 +1,1391 @@
+(function(d) {
+	//!## WIME
+	//!### Sub Function
+	d.extend({
+		GetPos: function(obj, coordinate){
+			//!+ **GetPos: function(obj, coordinate)**
+			//! + description: get position by object
+			//! + parameters: **obj** target object,  _coordinate_ option: x or y
+			if(!obj) return;
+			if((coordinate).toUpperCase() =='X')
+				return d.Offset(obj).left;
+			else if((coordinate).toUpperCase() =='Y')
+				return d.Offset(obj).top;
+		},		
+		GetOffsetLeft: function(obj){ 
+			//!+ **GetOffsetLeft(obj)**	
+			//! + description: get offset browser compatibility
+			var left=0; 
+			var offsetParent=obj;
+			while(offsetParent != null && offsetParent != document.body){ 
+				left+=offsetParent.offsetLeft ; 
+				offsetParent=offsetParent.offsetParent ; 
+			} 
+			return left;
+		},
+		IEResizeDebug: function(event){ 
+			if(event && event.target != window){
+				return true;
+			}
+		},		
+		Spell: function(){
+			//!+ **Spell(key, name, spell, ind)**
+			//! + description: WIME spell terms
+			var arg=arguments[0];
+			var spell=arg['spell'];
+			var key=arg['key'];
+			var mapping={
+				'ascii': d.user.IME[d.user['lang']][d.glob.target['ime']]['mapping']['ascii'],
+				'filter': d.user.IME[d.user['lang']][d.glob.target['ime']]['mapping']['filter']
+			}
+			var Standard=function(){
+				if(typeof(mapping.ascii[key]) != 'undefined'){
+					spell.splice(arg['caret'], 0, mapping.ascii[key]);
+				}
+				var str=spell.join('');
+				for(var i in mapping.filter){
+					if(d.user.prototypeDebug == true && !mapping.filter.hasOwnProperty(i)) continue;
+					str=str.replace(i, mapping.filter[i], 'ig');
+				}
+				spell=str.split('');
+				return spell;
+			}
+			switch(arg['name']){
+				case 'JIS':
+					if(arg['event'].shiftKey === true){
+						mapping.ascii={
+							51: 'ぁ',
+							52: 'ぅ',
+							53: 'ぇ',
+							54: 'ぉ',
+							55: 'ゃ',
+							56: 'ゅ',
+							57: 'ょ',
+							48: 'を',
+							69: 'ぃ',
+							90: 'っ'
+						}
+					}
+					return Standard();
+					break;
+				case 'Kamei':
+					return Standard();
+					break;
+				case 'Kana':
+					return Standard();
+					break;
+				case 'Phonetic':
+					// Phonetic Order By Tone
+					var consonant, either, vowel, tone;
+					var pos=null;
+					if(d.glob.browser == 'FIREFOX'){
+						// FIREFOX取到的ㄤASCII是59，要轉成186
+						key=key == 59 ? 186 : key;
+					}
+					consonant=[ //子音
+					49, 81, 65, 90, 50,
+					87, 83, 88, 69, 68,
+					67, 82, 70, 86, 53,
+					84, 71, 66, 89, 72, 78
+					]; 
+					either=[85, 74, 77]; //中音			
+					vowel=[ //母音
+					56, 73, 75, 188, 57,
+					79, 76, 190, 48, 80,
+					186, 191, 189]
+					; 
+					tone=[32, 54, 51, 52, 55]; //韻		
+					for(var i=0; i < consonant.length; i++){
+						if(key == consonant[i]){
+							pos=0;
+						}
+					}
+					for(var i=0; i < either.length; i++){
+						if(key == either[i]){
+							pos=1;
+						}
+					}				
+					for(var i=0; i < vowel.length; i++){
+						if(key == vowel[i]){
+							pos=2;
+						}
+					}
+					for(var i=0; i < tone.length; i++){
+						if(key == tone[i]){
+							pos=3;
+						}
+					}
+					if(typeof(mapping.ascii[key]) != 'undefined'){
+						spell[pos]=mapping.ascii[key];
+					}
+					if(spell[0] == null && spell[1] == null && spell[2] == null){
+						spell.length=0;
+					}
+					d.Log(' + Spell: [0]'+spell[0]+', [1]'+spell[1]+', [2]'+spell[2]+', [3]'+spell[3], 1);
+					return spell;
+					break;
+				case 'Changjie':
+					if(typeof(mapping.ascii[key]) != 'undefined'){
+						spell.splice(arg['caret'], 0, mapping.ascii[key]);
+					}
+					d.Log(' + Spell: [0]'+spell[0]+', [1]'+spell[1]+', [2]'+spell[2]+', [3]'+spell[3]+', [4]'+spell[4]+', [5]'+spell[5], 1);
+					return spell;
+					break;
+			}
+		},
+		Send: function(name, key){
+			//!+ **Send(name, key)**
+			//! + description: WIME send term
+			switch(name){
+				case 'JIS':
+					if((key === 32) || (key === 13)) return true
+					break;
+				case 'Kamei':
+					if((key === 32) || (key === 13)) return true
+					break;
+				case 'Kana':
+					if((key === 32) || (key === 13)) return true
+					break;
+				case 'Phonetic':
+					// phonetic: Tone , Space or Enter // 
+					if((d.glob.spell[0]||d.glob.spell[1])&&(d.glob.spell[3])) return true
+					else if((key === 32) || (key === 13)) return true
+					break;
+				case 'Changjie':
+					// changjie: Space or Enter // 
+					if((key === 32) || (key === 13)) return true
+					break;
+			}
+		},
+		ChangeIME: function(){
+			//!+ **ChangeIME()**
+			//! + description: Change IME
+			var ime, firstIME;
+			var next=false;
+			var h=0;
+			for(var i in d.user.IME[d.user['lang']]){
+				if((d.user.prototypeDebug == true) && (!d.user.IME[d.user['lang']].hasOwnProperty(i))) continue;
+				if(!d.glob.target['ime']){
+						ime=i;
+						break;
+				} else{
+					if(d.user.IME[d.user['lang']]['enable'] === false) continue;
+					if(h === 0){
+						firstIME=i;
+					}
+
+					if(i == d.glob.target['ime']){
+						if(h === d.ObjectKeys(d.user.IME[d.user['lang']]).length){
+							ime=firstIME;
+							break;
+						}
+						next=true;
+					}
+					else if(next === true){
+						ime=i;
+						break;
+					}
+					h++;	
+				}
+			}
+			if(d.glob.devices == 'MOBILE'){
+				d.OpenWIME(ime, 'show');
+			} else{
+				d.OpenWIME(ime);
+			}
+		},
+		IsContinue: function(continuous){
+			//!+ **IsContinue(continuous)**
+			//! + description: WIME will continuous when exec WIME finish
+			if(continuous){
+				d.Log(' + Continue: Open', 2);
+				candidate.Close();
+				d.Focus('keyboard');
+			} else{
+				d.Log(' + Continue: Close', 2);
+				keyboard.Close();
+				candidate.Close();
+				wime.Close();
+			}
+			if(d.glob.fullGaiji[d.glob.code['wime']] !== true){
+				d.PartWFA({
+					type: 'gaiji',
+					elem: d.font['object'],
+					str: d.user.imeNewCSS['enable'] ? d.glob.gaiji[d.user.sign['wime']+d.font[d.glob.code['wime']]['fontID']] : d.glob.gaiji[d.font[d.glob.code['wime']]['fontID']]
+				});
+			}
+		},
+		GetQueryWIME: function(setting){
+			var url=d.glob['url']+d.user['preprocessorPath']+d.user.queryMDB['filename']+d.user['preprocessor'];
+			switch(d.user['lang']){
+				case 'JPN':
+					var str={
+						kana: setting['ime'] === 'Kana' || setting['ime'] === 'JIS' ? encodeURI(setting['str']) : 'NULL',
+						kamei: setting['ime'] === 'Kamei' ? encodeURI(setting['str']) : 'NULL'
+					}
+					if(d.user['queryType'] == 'ajax'){
+						var query={
+							'url': url
+								+'?queryType='+d.user['queryType']
+								+'&lang='+d.user['lang'],
+							'json': {
+								'strokeString':'NULL',
+								'strokeStrMin':'NULL',
+								'strokeStrMax':'NULL',
+								'radicalString1':'NULL',
+								'radicalString2':'NULL',
+								'radicalString3':'NULL',
+								'radicalString4':'NULL',
+								'kana': str['kana'],
+								'kamei': str['kamei'],
+								'similar': 'NULL',
+								'fontFilename': d.font[d.glob.code['wime']]['fontFN']
+							}
+						}
+					} else{
+						var query=url+
+						'?queryType='+d.user['queryType']+
+						'&lang='+d.user['lang']+			
+						'&strokeString=NULL'+
+						'&strokeStrMin=NULL'+
+						'&strokeStrMax=NULL'+
+						'&radicalString1=NULL'+
+						'&radicalString2=NULL'+
+						'&radicalString3=NULL'+
+						'&radicalString4=NULL'+
+						'&kana='+str['kana']+
+						'&kamei='+str['kamei']+
+						'&similar=NULL'+
+						'&fontFilename='+d.font[d.glob.code['wime']]['fontFN']
+					}
+					break;
+				case 'CHT':
+					var str='';
+					setting['str']=setting['str'].split('');
+					for(var i=0; i < setting['str'].length; i++){
+						str+=d.user.IME[d.user['lang']][d.glob.target['ime']]['mapping']['change'][setting['str'][i]];
+					}
+					setting['str']=str.replace(/\s/g, '');
+					var str={
+						phon: setting['ime'] === 'Phonetic' ? encodeURI(setting['str']): 'NULL',
+						chaj: setting['ime'] === 'Changjie'  ? encodeURI(setting['str']): 'NULL'
+					}
+					if(d.user['queryType'] == 'ajax'){
+						var query={
+							'url': url+'?queryType='+d.user['queryType']+'&lang='+d.user['lang'],
+							'json': {
+								'phon': str['phon'],
+								'chaj': str['chaj'],
+								'fontFilename': d.font[d.glob.code['wime']]['fontFN']
+							}
+						}
+					} else{
+						var query=url
+						+'?queryType='+d.user['queryType']
+						+'&lang='+d.user['lang']	
+						+'&phon='+str['phon']
+						+'&chaj='+str['chaj']
+						+'&fontFilename='+d.font[d.glob.code['wime']]['fontFN']
+					}
+					break;
+			}
+			return query;
+		},
+		utf162Char: function(utf16){
+			if(typeof(utf16) === 'string'){
+				var charCode=String.fromCharCode(utf16['gaiji'][i]);
+			} else if(typeof(utf16) === 'array' || typeof(utf16) === 'object'){
+				var charCode=[];
+				for(var i in utf16){
+					if(d.user.prototypeDebug == true && !utf16.hasOwnProperty(i)) continue;
+					charCode.push(String.fromCharCode(utf16[i]));
+				}
+			}
+			return charCode;
+		},
+		GetStyle: function(elem, styleProp){
+			if(styleProp){
+				if(elem.currentStyle){
+					return elem.currentStyle[d.Camelize(styleProp)];
+				} else if (document.defaultView && document.defaultView.getComputedStyle) {
+					return document.defaultView.getComputedStyle(el, null)
+					.getPropertyValue(styleProp);
+				} else {
+					return elem.style[d.Camelize(styleProp)]; 
+				}
+			} else{
+				if(elem.currentStyle){
+					return elem.currentStyle;
+				} else if (document.defaultView && document.defaultView.getComputedStyle) {
+					return document.defaultView.getComputedStyle(elem, null);
+				} else {
+					return elem.style; 
+				}				
+			}
+		},
+		InsertText: function(elem, str){
+			//!+ **InsertText(elem, str)** text cross browser.
+			var i='innerText' in elem ? 'innerText' : 'textContent';
+			elem[i]=str;
+		},
+		Camelize: function(str){
+			return str.replace(/\-(\w)/g, function(str, letter){
+				return letter.toUpperCase();
+			});
+		},
+		GetCaretPosition: function(elem, top ,left){
+			var mirror, offset, mw, mh, str, start, pl, pt, caret, css1, css2, css3, css4, css5, css6;
+			var hei, wid, line;
+			top=top ? top : 0;
+			left=left ? left : 0;
+			pt=0;
+			pl=0;
+			mirror=document.createElement('div');
+			elem.parentNode.appendChild(mirror);
+			caret=d.GetCaret(elem)['start'];
+			css1=['width', 'box-sizing',
+			'padding-bottom', 'padding-left', 'padding-right', 'padding-top', 
+			'font-family', 'font-size', 'font-style', 'font-variant', 'font-weight', 
+			'white-space', 'word-wrap', 'word-break', 'word-spacing',
+			'letter-spacing', 'line-height',
+			'text-decoration', 'text-indent', 'text-transform', 
+			'border-width',  'border-style', 'direction'
+			];
+			for(var i=0; i < css1.length; i++){
+				var j=d.Camelize(css1[i]);
+				try{
+					mirror.style[j]=elem.style[j];
+				} catch(e){
+				}
+			}
+			css2=d.GetStyle(elem);
+			for(var i in css2){
+				if(d.user.prototypeDebug == true && typeof(css2.hasOwnProperty) != 'undefined' && !css2.hasOwnProperty(i)) continue;
+				var j=d.Camelize(i);
+				try{
+					mirror.style[i]=css2[i];
+				} catch(e){
+				}
+			}
+			
+			if(elem.nodeName == 'TEXTAREA'){
+				str=elem.value.split('');
+				css3={
+					'word-wrap': 'break-word',
+					'word-break': 'break-all'
+				}
+				for(var i in css3){
+					if(d.user.prototypeDebug == true && typeof(css3.hasOwnProperty) != 'undefined' && !css3.hasOwnProperty(i)) continue;
+					var j=d.Camelize(i);
+					elem.style[j]=css3[i];
+				}
+				css4={
+					'display': 'block',
+					'height': 'auto',				
+					'white-space':'pre-wrap',
+					'word-wrap': 'break-word',
+					'word-break': 'break-all',
+					'width': elem.offsetWidth+'px',		
+					'-webkit-logical-height': 'auto'
+				}
+				for(var i in css4){
+					if(d.user.prototypeDebug == true && typeof(css4.hasOwnProperty) != 'undefined' && !css4.hasOwnProperty(i)) continue;
+					var j=d.Camelize(i);
+					mirror.style[j]=css4[i];
+				}
+				mh=0;
+				line=[];
+				line[0]=0;
+				hei=[];
+				start=0;
+
+				for(var i=0; i < caret; i++){
+					hei.push(str[i]);
+					if(i == caret-1){
+						if(escape(str[i]) == "%0D"){
+							// IE8
+							if(escape(str[i+1]) == "%0A"){
+								hei.push(str[i+1]);
+								hei.push(str[i+2]);
+							}
+						} else if(escape(str[i]) == "%0A"){
+							// Chrome
+							hei.push(str[i+1]);
+						}						
+					} else{
+						if(escape(str[i]) == "%0D"){
+							if(escape(str[i+1]) == "%0A"){
+								caret++;
+							}
+						} 	
+					}
+					d.InsertText(mirror, hei.join(''));
+					if(mh != mirror.offsetHeight){
+						mh=mirror.offsetHeight;
+						line[line.length]=mh;
+						start=i;
+					}
+				}
+				mh=line.length < 2 ? 0 : line[line.length-2];
+				
+				wid=[];
+				mirror.style['height']=elem.clientHeight+'px';
+				for(var i=start; i < caret; i++){
+					wid.push(str[i]);
+				}
+				d.InsertText(mirror, wid.join(''));
+				css5={
+					'width': 'auto',
+					'display': 'inline',
+					'overflow-y': 'hidden'					
+				}
+				for(var i in css5){
+					if(d.user.prototypeDebug == true && typeof(css5.hasOwnProperty) != 'undefined' && !css5.hasOwnProperty(i)) continue;
+					mirror.style[i]=css5[i];
+				}
+				if(wid.length == 1 && (escape(wid[0]) == "%0D" || escape(wid[0]) == "%0A")){
+					// only one string is %0D width was Error when IE8, only one string is %0A width was errorwhen IE11	
+					mw='0';
+				} else{
+					mw=mirror.offsetWidth;
+				}
+				pt=elem.pageYOffset || elem.scrollTop;
+				
+			}
+			if(elem.nodeName == 'INPUT'){
+				if(elem.type != 'text') return {top: 0, left: 0};
+				mh=0;
+				start=0;
+				str=elem.value.split('');
+				css6={
+					'width': 'auto',
+					'display': 'inline',
+					'overflow-x': 'scroll'
+				}
+				for(var i in css6){
+					if(d.user.prototypeDebug == true && typeof(css6.hasOwnProperty) != 'undefined' && !css6.hasOwnProperty(i)) continue;
+					mirror.style[i]=css6[i];
+				}
+				wid=[];
+				for(var i=start; i < caret; i++){
+					wid.push(str[i]);
+				}
+				d.InsertText(mirror, wid.join(''));
+				mw=mirror.offsetWidth;
+				pl=elem.pageXOffset || elem.scrollLeft;
+			}
+			elem.parentNode.removeChild(mirror);
+			if(mw-pl >= elem.offsetWidth){
+				mw=elem.offsetWidth;
+			} else if(mw-pl <= 0){
+				mw=0;
+			} else{
+				mw=mw-pl;
+			}
+			if(mh-pt >= elem.offsetHeight){
+				mh=elem.offsetHeight;
+			} else if(mh-pt <= 0){
+				mh=0;
+			} else{
+				mh=mh-pt;
+			}
+			offset=d.Offset(elem);
+			d.Log(' + Offset TOP: ' +offset['top']+' \n + Elem Top: '+mh+'\n + Setting Top: '+top, 1);
+			d.Log(' + Offset Left: ' +offset['left']+'\n + Elem Left: '+mw+'\n + Setting Left: '+left, 1);
+			return {
+				'top': offset['top']+mh+top+'px',
+				'left': offset['left']+mw+left+'px'
+			}
+		},
+		RemoveError: function(elem, className){
+			if(d.GetClass(elem, className)) d.DeleteClass(elem, className)
+		}
+	});
+	//!### Main Function
+	d.extend({
+		OpenWIME: function(ime, state, e){
+			if(typeof(event) != 'undefined'){
+				d.PreventDefault(event);
+			}
+			if(!ime){
+				d.ChangeIME();
+			} else{
+				wime.setting={
+					'ime': ime,
+					'state': state ? state : 'hide',
+					'event': e
+				}
+				wime.Initialize();
+				trigger.Close();
+			}
+		},
+		wime: {
+			//!+ **CreateWIME()**
+			//! + description: create WIME
+			setting:{
+				// ime, state, event
+			},
+			Initialize: function(){
+				d.Log('### Initialize', 3);
+				if( // return when ime isn't enable or undefined is false or target is null
+					typeof(d.user.IME[d.user['lang']][wime.setting['ime']]) == 'undefined' || 
+					d.user.IME[d.user['lang']][wime.setting['ime']]['enable'] === false || 
+					d.glob.target['elem'] == null
+				) return;
+				if(d.GetClass(d.glob.target['elem'], d.user.targetClass, 'fuzzy')){ // when wime is open
+					var ime=d.GetIME(d.glob.target['elem'], d.user.targetClass);	
+					if(ime == wime.setting['ime'] && wime.setting['state'] != 'show'){ // the same ime, but composition window is hide
+
+						d.glob.target.ime = d.glob.target.ime ? d.glob.target.ime : ime;
+						wime.Close( true ); // remove template
+						if ( d.glob.browser == "FIREFOX" ) {
+							d.glob.target.elem.focus();
+							d.glob.target.elem.hidden = true;
+							d.glob.target.elem.style[ "ime-mode" ] = "auto";
+							d.glob.target.elem.blur();
+							d.glob.target.elem.hidden = false;
+							d.glob.target.elem.focus();
+						}
+						d.Focus();
+					} else{ // the same or different ime, composition is show
+
+						if ( d.user.reWFA === true ){
+							if ( d.glob.reWFAID[0] ) clearTimeout( d.glob.reWFAID[0] );
+						}
+						if( // close wime when state isn't show or ime is different	
+							ime != wime.setting['ime'] ||
+							wime.setting['state'] != 'show'
+						) wime.Close(true);
+						d.glob.target['ime']=wime.setting['ime'];
+						wime.Open();
+						wime.Set();
+						if(wime.setting['state'] == 'show') wime.Show();
+						if(wime.setting['event'] ) wime.Execute();
+						if ( d.glob.devices == "DESKTOP" ) d.Focus( "keyboard" );
+						if(d.glob.features['keyboard']){
+							if(!d.IsHere('keyboard')) keyboard.Execute();
+						} 
+					}
+				} else{ // wime isn't open
+					d.glob.target['ime']=wime.setting['ime'];
+					wime.Open();
+					wime.Set();	
+					if(d.glob.features['keyboard']){
+						keyboard.Execute();
+					}
+					if(wime.setting['state'] == 'show') wime.Show();
+					d.Focus();
+				}
+			},
+			Open: function(){
+				d.Log('### Open', 3);
+				// insert template
+				d.SetTemplate('add', d.user.WIME['id']);
+				// insert event
+				d.CreateEvent(document.getElementById(d.user.WIME.composition['id']), 'click', wime.Click);
+				d.CreateEvent(document.getElementById(d.user.WIME.composition['id']), 'keydown', wime.Execute);
+				d.CreateEvent(document.getElementById(d.user.WIME.composition['id']), 'keyup', wime.Execute);		
+				if(d.user.WIME['position'] !== false) d.CreateEvent(window, 'resize', wime.SetPosition);
+			},
+			Set: function(){
+				d.Log('### Set', 3);
+				if(d.user.WIME.composition['size'] === 'font'){
+					if(d.glob['devices'] == 'DESKTOP'){
+						document.getElementById(d.user.WIME.composition['id']).style.fontSize=d.glob.target['elem'].style.fontSize;						
+					}
+				}
+				d.glob.spell.length=0;
+				d.SetFontFace({target: d.DOM(d.user.WIME.composition['id'], 'class'), fontface: d.font[d.glob.code['wime']]['fontface']});	
+				document.getElementById(d.user.WIME.composition['id']).setAttribute('placeholder', d.user.IME[d.user['lang']][wime.setting['ime']]['name']);
+				document.getElementById(d.user.WIME['btnIMEID']).innerHTML=d.user.IME[d.user['lang']][wime.setting['ime']]['html'];
+				d.CreateClass(d.glob.target['elem'], d.user.targetClass+wime.setting['ime']); //Target Object Use This Class
+				d.CreateClass(document.getElementById(d.user.WIME['btnIMEID']), d.user.targetIMEClass +wime.setting['ime']);
+				d.glob.target.elem.style.imeMode='disabled';
+				if ( d.glob.browser == "FIREFOX" ){
+					d.glob.target.elem.focus();
+					d.glob.target.elem.hidden = true;
+					d.glob.target.elem.style[ "ime-mode" ] = "disabled";
+					d.glob.target.elem.blur();
+					d.glob.target.elem.hidden = false;
+					d.glob.target.elem.focus();
+				}
+				if ( d.user.lang == "CHT" ) document.getElementById( d.user.WIME.composition.id ).style.fontFamily = "新細明體";
+				if ( d.user.lang == "JPN" ) document.getElementById( d.user.WIME.composition.id ).style.fontFamily = "MS PGothic";
+			},
+			Execute: function(event){
+				d.Log('### Execute', 3);
+				var e=event || window.event;
+				var target=e.target || e.srcElement;
+				var key, caret;
+				if(d.IsHere('keyboard')){
+					if(!d.IsHere('wime')){
+						wime.Open();
+						wime.Set();
+					}
+					wime.Show();
+				}
+				if(!document.getElementById(d.user.WIME.composition['id'])) return;	
+
+					if ( d.glob.result[ "gaiji" ].length > 0 ) { 
+						d.PreventDefault( event );
+					} else {
+						d.PreventDefault( event, [ "37", "38", "39", "40" ] );
+					}
+				if(e.type=='mousedown' || e.type=='mouseup'){
+					// **Mouse**
+					caret=d.GetCaret(document.getElementById(d.user.WIME.composition['id']))['start']; //Save Cursor Index
+					key=Number(target.getAttribute('data-value'));
+					caret=caret === 0 ? document.getElementById(d.user.WIME.composition['id']).value.split('').length : caret;
+				}
+				else if(e.type=='keydown' || e.type=='keyup'){
+					// **Keyboard**
+					caret=d.GetCaret(document.getElementById(d.user.WIME.composition['id']))['start']; //Save Cursor Index
+					key=d.GetKeyCode(e);
+					d.Hotkey(e);
+				}
+				if(e.type=='keydown' || e.type=='mousedown'){	
+					if(d.GetClass(document.getElementById(d.user.WIME.composition['id']), d.user.hideClass)) return;
+					if(d.glob.result['gaiji'].length > 0){
+						if(key === 13){//**Enter**
+							// IE9+ Enter Only Get Keydown
+							var gaiji=document.getElementById(d.user.WIME.candidate['strID']+'-'+parseInt(d.glob['optionID']-(d.glob.pageNum-1)*d.user.WIME.candidate['max']), 10)
+							if(gaiji == null) return;
+							d.Log('You Select: '+d.glob['optionID']);
+							d.InsertGaiji(gaiji.innerHTML);
+							d.Focus();
+						}
+					} else{
+						if(key === 8 || key === 46){//**Backspace, Delete: 46**
+							d.RemoveError(document.getElementById(d.user.WIME['windowID']), d.user.WIME['errorClass']);
+							if(document.getElementById(d.user.WIME.composition['id']).value == ''){
+								wime.Close();
+								d.Focus();
+							}
+							var space=0;
+							var word=0;
+							for(var i=0; i < d.glob.spell.length; i++){
+								if(d.glob.spell[i] == undefined){
+									space++;
+								} else{
+									word++;
+								}
+								if(word == caret) break;
+							}
+							d.glob.spell.splice(caret+space-1, 1);
+							return false;
+						}
+					}
+				}
+				else if(e.type=='keyup' || e.type=='mouseup'){
+					if(d.glob.result['gaiji'].length > 0){ // candidate show
+						var numASCII={49:1, 50:2, 51:3, 52:4, 53:5, 54:6, 55:7, 56:8, 57:9}
+						switch(key){
+							case 8: //**Backspace**
+								candidate.Close();
+								wime.Close();
+								d.Focus();
+								return false;
+								break;
+							case 27: //**Esc**
+								candidate.Close();
+								wime.Close();
+								d.Focus();
+								return false;
+								break;
+							case 33: //**PageUP**
+								if(d.glob.result['gaiji'].length > d.user.WIME.candidate['max']){
+									candidate.Prev();
+								}
+								break;
+							case 34: //**PageDown**
+								if(d.glob.result['gaiji'].length > d.user.WIME.candidate['max']){
+									candidate.Next();
+								}
+								break;
+							case 32: //**Space**
+								d.glob['optionID']++;
+								candidate.setting['optNum']=d.glob['optionID'];
+								candidate.Set();
+								document.getElementById(d.user.WIME.composition['id']).value=(document.getElementById(d.user.WIME.composition['id']).value).substr(0, document.getElementById(d.user.WIME.composition['id']).value.length-1);
+								break;
+							case 38: //**Up**
+								d.glob['optionID']--;
+								candidate.setting['optNum']=d.glob['optionID'];
+								candidate.Set();
+								break;
+							case 40: //**Down**
+								d.glob['optionID']++;
+								candidate.setting['optNum']=d.glob['optionID'];
+								candidate.Set();
+								break;
+							case 37: //**Left**
+								candidate.Prev();
+								break;
+							case 39: //**Right**
+								candidate.Next();
+								break;
+						}
+						if(key>=49 && key<=57){ //**Number 1-9**
+							var numID=numASCII[key];
+							d.InsertGaiji(document.getElementById(d.user.WIME.candidate['strID']+'-'+numID).innerHTML);
+							d.Focus();
+						}
+					} else{ // candidate hide
+						if((key >= 37 && key <= 40) || !d.glob.target['ime']) return false; //**Left, Up, Right, Down**
+						else if(key == 27){ //**Esc**
+							if(document.getElementById(d.user.WIME.composition['id']).value.split('').length == 0){
+								// string < 0
+								wime.Close();
+								d.Focus();
+							} else{
+								// string > 0
+								d.RemoveError(document.getElementById(d.user.WIME['windowID']), d.user.WIME['errorClass']);
+								document.getElementById(d.user.WIME.composition['id']).value='';
+								d.glob.spell.length=0;
+							}		
+						}
+						// get string after spell
+						var str=d.Spell({
+							'event': e,
+							'key': key,
+							'name': d.user.IME[d.user['lang']][d.glob.target['ime']]['name'],
+							'spell': d.glob.spell,
+							'caret': caret
+						});
+						
+						if(str != document.getElementById(d.user.WIME.composition['id']).value){
+							document.getElementById(d.user.WIME.composition['id']).value=str.toString().replace(/\,/g, '');
+							d.glob.spell=str;
+						}
+						if(d.user.WIME.composition['width'] === 'auto'){
+							// change composition width
+							var size=document.getElementById(d.user.WIME.composition['id']).value.split('').length;
+							var width=size<= 3 ? 3.3 : size+(size*0.1);
+							document.getElementById(d.user.WIME.composition['id']).style.width=width+'em';							
+						}
+						if(d.Send(d.user.IME[d.user['lang']][d.glob.target['ime']]['name'], key)){
+							var query=d.GetQueryWIME({
+								'ime': d.glob.target['ime'],
+								'str': document.getElementById(d.user.WIME.composition['id']).value
+							});
+							d.ConnectMDB('wime', query, d.OpenCandidate);
+						}
+						d.Focus();
+					}
+					if(d.glob.spell.length <= 0 && d.IsHere('keyboard') == false){
+						wime.Close();
+						d.Focus();
+					}
+				}
+			},
+			Click: function(){
+				d.Log('### Click', 3);
+				if(d.IsHere('keyboard')){
+					keyboard.Close();
+					if(d.glob.features['keyboard']) keyboard.Execute();
+				}
+			},
+			Show: function(){
+				d.Log('### Show', 3);
+				d.SetTemplate('show', d.user.WIME['id']);
+				if(d.user.WIME['position'] !== false) wime.SetPosition();
+			},
+			SetPosition: function(event){
+				d.Log('### SetPosition', 3);
+				if( // return when IE8- and wime isn't exist
+					d.IEResizeDebug(event) ||
+					!document.getElementById(d.user.WIME['id'])
+				) return;
+				if(d.user.WIME.composition['flow'] === 'caret'){
+					var pos=d.GetCaretPosition(d.glob.target['elem']);
+					document.getElementById(d.user.WIME['id']).style.postition='absolute';
+					document.getElementById(d.user.WIME['id']).style.top=pos['top'];
+					document.getElementById(d.user.WIME['id']).style.left=pos['left'];
+				} else{
+					d.SetMirrorsPosition({
+						elem: [document.getElementById(d.user.WIME['id'])],
+						align: d.user.WIME['align'],
+						position:  d.user.WIME['position'],
+						obj: d.glob.target['elem'],
+						top: d.user.WIME['top'],
+						left: d.user.WIME['left'],
+						bottom: d.user.WIME['bottom'],
+						right: d.user.WIME['right']
+					});					
+				}
+			},
+			Close: function(exclusivelyClose){
+				d.Log('### Close', 3);
+				if(d.glob.target['elem']){
+					if(d.glob['devices'] === 'MOBILE' || ((d.user.exclusivelyClose === true && exclusivelyClose === true) || (d.user.exclusivelyClose === false))){
+						// remove input style and clear target.ime when devices is mobile and user.exclusivelyClose is true
+						d.DeleteClass(d.glob.target['elem'], d.user.targetClass, 'fuzzy');
+						d.glob.target['ime']=null;
+						d.glob.target.elem.style.imeMode='auto';
+					} 
+					d.DeleteClass(document.getElementById(d.user.WIME['btnIMEID']), d.user.imeClass+d.glob.target['ime']);
+				}
+				if(!d.IsHere('wime')) return;
+				// remove event	
+				d.RemoveError(document.getElementById(d.user.WIME['windowID']), d.user.WIME['errorClass']);
+				d.DeleteEvent(document.getElementById(d.user.WIME.composition['id']), 'click', wime.Click);
+				d.DeleteEvent(document.getElementById(d.user.WIME.composition['id']), 'keydown', wime.Execute);
+				d.DeleteEvent(document.getElementById(d.user.WIME.composition['id']), 'keyup', wime.Execute);
+				if(d.user.WIME.composition['flow'] === 'caret'){
+				} else{
+					if(d.user.WIME['position'] !== false) d.DeleteEvent(window, 'resize', wime.SetPosition);
+				}
+				keyboard.Close();
+				// remove setting							
+			 	d.glob.spell.length=0; //Clear Spell
+				d.glob.ime2English=false
+				document.getElementById(d.user.WIME.composition['id']).value=''; //Clear CompositionWindow
+				// remove template
+				d.SetTemplate('remove', d.user.WIME['id']);
+			}
+		},
+		OpenCandidate: function(str){
+			// Data Save in Result
+			// Open List
+			candidate.setting={
+				optNum: 1
+			}
+			candidate.Initialize();
+			candidate.Set();
+			if(d.user.WIME.preview['enable']) d.DeleteClass(document.getElementById(d.user.WIME.preview['id']), d.user.hideClass);
+			d.StartWFA({
+				str: d.utf162Char(str['gaiji']),
+				elem: document.getElementById(d.user.WIME.candidate['id']),
+				code: d.glob.code['wime'],
+				isWIME: true
+			});				
+		},	
+		candidate: {
+			//!+ **candidate**
+			//! + description: create Candidate
+			Initialize: function(){
+				d.Log('### Initialize', 3);
+				candidate.Open();
+			},
+			Open: function(){
+				d.Log('### Open', 3);
+				// insert template
+				var wimeNum, wimeStr;
+				d.SetTemplate('add', d.user.WIME.candidate['id']);
+				for(var i=1; i <= d.user.WIME.candidate['max']; i++){
+					// write number in table
+					var num=document.createElement('div');
+					num.id=d.user.WIME.candidate['numID']+'-'+i;
+					num.innerHTML=i;
+					d.CreateClass(num, d.user.WIME.candidate['numID']);
+					document.getElementById(d.user.WIME.candidate['bodyNumID']).appendChild(num);
+				}
+				for(var j=1; j <= d.user.WIME.candidate['max']; j++){
+					// write gaiji in table
+					var str=document.createElement('div');
+					str.id=d.user.WIME.candidate['strID']+'-'+j;
+					str.innerHTML='無'+j;
+					d.CreateClass(str, d.user.WIME.candidate['strID']);
+					document.getElementById(d.user.WIME.candidate['bodyStrID']).appendChild(str);
+				}
+				// set style
+				document.getElementById(d.user.WIME.candidate['bodyNumID']).style.height=d.user.WIME.candidate['max']*22+'px';
+				d.SetFontFace({target: d.DOM(d.user.WIME.preview['id'], 'id'), fontface: d.font[d.glob.code['wime']]['fontface']});	
+
+				// insert event
+				for(var j=1; j<=d.user.WIME.candidate['max']; j++){
+					d.CreateEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'mouseover', candidate.GetID);
+					if(d.glob['devices'] == 'MOBILE'){
+						d.CreateEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'touchstart', candidate.InsertStr)
+					} else{
+						d.CreateEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'click', candidate.InsertStr)
+					}
+				}
+				if(d.user.WIME['position'] !== false) d.CreateEvent(window, 'resize', candidate.SetPosition);
+				d.CreateEvent(window, 'resize', candidate.SetPreviewPosition);
+			},
+			Set: function(){
+				d.Log('### Set', 3);
+				if(!document.getElementById(d.user.WIME.candidate['id'])) return;
+				d.SetTemplate('show', d.user.WIME.candidate['id']);
+				var fontface=d.glob.fullGaiji[d.glob.code['wime']] == true ? d.font[d.glob.code['wime']]['fontface'] : (d.user.imeNewCSS ? d.font[d.glob.code['wime']]['fontface']+d.user.sign['wime'] : d.font[d.glob.code['wime']]['fontface']);
+				var pageNums=Math.ceil((d.glob.result['gaiji']).length/d.user.WIME.candidate['max']);
+				d.glob.optionID=candidate.setting['optNum'] ? candidate.setting['optNum'] : d.glob.optionID;
+				if(d.glob.optionID > (d.glob.result['gaiji']).length){
+					if(candidate.isNextPage){
+						 d.glob.optionID=(d.glob.pageNum==pageNums) ? d.glob.optionID%d.user.WIME.candidate['max'] : (d.glob.result['gaiji']).length
+					}
+					else d.glob.optionID=1;
+				}
+				d.glob.optionID=d.glob.optionID <= 0 ? (d.glob.result['gaiji']).length : d.glob.optionID
+				d.glob.pageNum=Math.ceil(d.glob.optionID/d.user.WIME.candidate['max']);
+				document.getElementById(d.user.WIME.candidate['pageID']).innerHTML=d.glob.pageNum+'/'+pageNums;
+				for(var i=1; i <= d.user.WIME.candidate['max']; i++){
+					// Write Gaiji
+					var optionStr=document.getElementById(d.user.WIME.candidate['strID']+'-'+i);
+					optionStr.innerHTML='';
+					optionStr.innerHTML=String.fromCharCode(d.glob.result['gaiji'][(i+(d.glob.pageNum-1)*d.user.WIME.candidate['max'])-1]);
+				}
+				for(var i=1; i <= d.user.WIME.candidate['max']; i++){
+					// Return Style
+					var optionStr=document.getElementById(d.user.WIME.candidate['strID']+'-'+i);
+					var optionNum=document.getElementById(d.user.WIME.candidate['numID']+'-'+i);
+					if(d.GetClass(optionStr, d.user.WIME.candidate['select'])) d.DeleteClass(optionStr, d.user.WIME.candidate['select'])
+					if(d.GetClass(optionNum, d.user.WIME.candidate['select'])) d.DeleteClass(optionNum, d.user.WIME.candidate['select'])		
+				}
+				var getID=d.glob['optionID']-((d.glob.pageNum-1)*d.user.WIME.candidate['max']);
+				d.CreateClass(document.getElementById(d.user.WIME.candidate['strID']+'-'+getID), d.user.WIME.candidate['select']);
+				d.CreateClass(document.getElementById(d.user.WIME.candidate['numID']+'-'+getID), d.user.WIME.candidate['select']);
+				d.SetFontFace({target: d.DOM(d.user.WIME.candidate['strID'], 'class'), fontface: fontface});	
+				d.SetFontFace({target: d.DOM(d.user.WIME.preview['id'], 'id'), fontface: fontface});	
+				document.getElementById(d.user.WIME.preview['id']).innerHTML=document.getElementById(d.user.WIME.candidate['strID']+'-'+getID).innerHTML;
+				if(d.user.WIME['position'] !== false) candidate.SetPosition();
+				if(d.user.WIME['position'] !== false) candidate.SetPreviewPosition();
+				d.Log('Page:'+pageNums+', Now Page:'+d.glob.pageNum+', You Select:'+d.glob['optionID']);
+			},
+			Prev: function(){
+				// List Prev
+				d.Log('#### Prev', 3);
+				if(d.glob.result['gaiji'].length <= d.user.WIME.candidate['max']) return false;
+				d.glob['optionID']-=d.user.WIME.candidate['max'];
+				candidate.setting['optNum']=d.glob['optionID'];
+				candidate.Set();
+				d.Focus('keyboard');	
+				return false;
+			},
+			Next: function(){
+				// List Next	
+				d.Log('#### Next', 3);
+				if(d.glob.result['gaiji'].length <= d.user.WIME.candidate['max']) return false;
+				d.glob['optionID']+=d.user.WIME.candidate['max'];
+				candidate.setting['optNum']=d.glob['optionID'];
+				candidate.Set();
+				d.Focus('keyboard');
+				return false;
+			},
+			InsertStr: function(){
+				// Insert Gaiji
+				d.Log('#### InsertStr', 3);
+				if(this.innerHTML == '') return false;
+				var self=this;
+				while(self.childNodes[0].nodeType != 3){
+					self=self.childNodes[0];
+				}
+				d.InsertGaiji(self.innerHTML);	
+			},
+			GetID: function(){
+				// Get ID when Mouse Over List
+				d.Log('#### GetID', 3);
+				if(this.innerHTML == '') return false
+				var id=this.id.replace(d.user.WIME.candidate['strID']+'-', '');
+				id=Number(id)+Number(((d.glob.pageNum-1)*d.user.WIME.candidate['max']));
+				candidate.setting['optNum']=id;
+				candidate.Set();
+				d.Focus('keyboard');
+			},
+			SetPosition: function(){
+				d.Log('### SetPosition', 3);
+				if(!document.getElementById(d.user.WIME.candidate['id'])) return;
+				if(d.user.WIME.composition['flow'] === 'caret'){
+					var position=d.GetPosition(document.getElementById(d.user.WIME['id']), document.getElementById(d.user.WIME['id']).offsetHeight+5, 0);
+					document.getElementById(d.user.WIME.preview['id']).style.postition='absolute';
+					document.getElementById(d.user.WIME.candidate['id']).style.top=position['top'];
+					document.getElementById(d.user.WIME.candidate['id']).style.left=position['left'];
+				} else{
+					d.SetMirrorsPosition({
+						elem: [document.getElementById(d.user.WIME.candidate['id'])],
+						align: d.user.WIME['align'],
+						position:  d.user.WIME['position'],
+						obj: d.glob.target['elem'],
+						top: d.user.WIME.candidate['top'],
+						left: d.user.WIME.candidate['left'],
+						bootm: d.user.WIME.candidate['bootm'],
+						right: d.user.WIME.candidate['right']			
+					});				
+				}
+			},
+			SetPreviewPosition: function(){
+				d.Log('### SetPreviewPosition', 3);
+				if(!document.getElementById(d.user.WIME['id'])) return;
+				if(d.user.WIME.composition['flow'] === 'caret'){
+					var position=d.GetPosition(document.getElementById(d.user.WIME['id']), document.getElementById(d.user.WIME['id']).offsetHeight+5, 130);
+					if(document.getElementById(d.user.WIME.preview['id'])){
+						document.getElementById(d.user.WIME.preview['id']).style.position='absolute';
+						document.getElementById(d.user.WIME.preview['id']).style.top=position['top'];
+						document.getElementById(d.user.WIME.preview['id']).style.left=position['left'];						
+					}
+				} else{
+					d.SetMirrorsPosition({
+						elem: [document.getElementById(d.user.WIME.preview['id'])],
+						align: d.user.WIME['align'],
+						position:  d.user.WIME['position'],
+						obj: d.glob.target['elem'],
+						top: d.user.WIME.preview['top'],
+						left: d.user.WIME.preview['left'],
+						bootm: d.user.WIME.preview['bootm'],
+						right: d.user.WIME.preview['right']
+					});				
+				}
+			},
+			Close: function(){
+				d.Log('### Close', 3);
+				if(!d.IsHere('candidate')) return;
+				// Remove Event 
+				for(var j=1; j<=d.user.WIME.candidate['max']; j++){
+					d.DeleteEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'mouseover', candidate.getID);
+					if(d.user['devices'] == 'MOBILE'){
+						d.DeleteEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'touchstart', candidate.InsertStr);
+					} else{
+						d.DeleteEvent(document.getElementById(d.user.WIME.candidate['strID']+'-'+j), 'click', candidate.InsertStr);
+					}
+				}
+				if(d.user.WIME.composition['flow'] === 'caret'){
+				} else{
+					if(d.user.WIME['position'] !== false) d.DeleteEvent(window, 'resize', candidate.SetPosition);
+					if(d.user.WIME['position'] !== false) d.DeleteEvent(window, 'resize', candidate.SetPreviewPosition);
+				}
+				// Remove Set
+				d.glob['queryState']=false; //if is True, Result is Finish
+				d.glob.result['gaiji'].length=0; //Result Clear
+			 	d.glob.spell.length=0; //Speel Clear
+				d.glob.pageNum=1; //List Page Clear
+				d.glob.optionID=1; //List Cursor Clear;
+				document.getElementById(d.user.WIME.composition['id']).value=''; //WIME Input Clear
+				// Remove HTML
+				d.SetTemplate('remove', d.user.WIME.candidate['id']);
+			}
+		},
+		OpenKeyboard: function(){
+			d.Log('## OpenKeyboard', 3);
+			d.PreventDefault(event);	
+			keyboard.Execute();
+		},	
+		keyboard: {
+			//!+ **keyboard**
+			//! + description: create keyboard
+			Open: function(){
+				d.Log('### Open', 3);
+				// insert template
+				d.SetTemplate('add', d.user.keyboard['id']);
+				var node=[];
+				for(var i=0; i < d.user.keyboardBtn.length; i++){
+					node.push(d.DOM(d.user.keyboardBtn[i], 'class'));
+				}
+				// insert event	
+				for(var i=0; i < node.length; i++){
+					for(var j=0; j < node[i].length; j++){
+						d.CreateEvent(node[i][j], 'mousedown', wime.Execute);
+						d.CreateEvent(node[i][j], 'mouseup', wime.Execute);
+					}
+				}			
+			},
+			Set: function(){
+				d.Log('### Set', 3);
+				d.SetTemplate('show', d.user.keyboard['id']);
+			},
+			Execute: function(){
+				d.Log('### Execute', 3);
+				if(d.IsHere('keyboard')) keyboard.Close();
+				else{
+					keyboard.Open();
+					keyboard.Set();
+				}
+			},
+			Close: function(){	
+				// remove event
+				if(!d.IsHere('keyboard')) return;
+				d.Log('### Close', 3);
+				var node=[];
+				for(var i=0; i < d.user.keyboardBtn.length; i++){
+					node.push(d.DOM(d.user.keyboardBtn[i], 'class'));
+				}
+				for(var i=0; i < node.length; i++){
+					for(var j=0; j < node[i].length; j++){
+						d.DeleteEvent(node[i][j], 'mousedown', wime.Execute);
+						d.DeleteEvent(node[i][j], 'mouseup', wime.Execute);
+					}
+				}
+				// remove setting
+				if(document.getElementById(d.user.WIME.composition['id'])) document.getElementById(d.user.WIME.composition['id']).focus();		
+				// remove template
+				d.SetTemplate('remove', d.user.keyboard['id']);
+			}
+		}
+	});		
+	//!### User Options
+	d.extend(true, d.user, {
+		sign:{
+			'wime': '-wime'
+		},
+		ime2English:{
+			enable: false,
+			message: {
+				'CHT': '如要使用外字輸入法，請將內建輸入法切換成英文',
+				'JPN': '日本語入力IMEをオフにしてください',
+				'ENG': 'Please change windows IME to English'				
+			}		
+		},
+		targetClass: 'dcw-wime-target-',
+		imeClass : 'dcw-wime-ime-',
+		keyboardBtn: ['dcw-btn', 'dcw-btn-success', 'dcw-btn-info'],
+		exclusivelyClose: true,
+		continuous: false, //!+ **continuous** WIME will continuous when exec WIME finish
+		imeNewCSS:{
+			enable: true, //!+ **imeNewCSS** if true, WFS will loading new CSS file when open wime
+			id: 'dcw-wimeCSS'
+		},
+		keyboard: {
+			//!+ **keyboard** 
+			id: 'dcw-keyboard',
+			hotkey: [17, 18, 48], //!+ **keyboardHotkey** keyboard Hotkey(Not yet)
+			enable: true, //!+ **enable** If true, keyboard will show
+			mandatory: {
+				//!+ **mandatory** 
+				desktop: false, //! + **desktop** If true, Wime will mandatory open when desktop
+				mobile: true //! + **mobile** If true, Wime will mandatory open when mobile
+			}			
+		},
+		WIME: {
+			//!+ **WIME**
+			id: 'dcw-wime',
+			composition:{
+				id: 'dcw-wime-composition',
+				size: 'font',
+				flow: 'caret',
+				width: 'auto'
+			},
+			compositionID: 'dcw-wime-composition',
+			windowID: 'dcw-wime-window',
+			errorClass: 'dcw-wime-wrap-error',
+			btnIMEID: 'dcw-wime-ime',
+			align: 'target', //! + **align** wime target object. Can be set to **target** or **body**
+			position: 'bottom-left',//! + **pos** wime Position. Can be set to **topLeft**, **topRight**, **bottomRight** or **bottomLeft**
+			top: 5,
+			left: 0,
+			candidate: {
+				//!+ **candidate**
+				id: 'dcw-candidate',
+				pageID: 'dcw-candidate-page',
+				max: 9, //!+ **max**  candidate option max
+				strID: 'dcw-candidate-str',
+				numID: 'dcw-candidate-num',
+				select: 'dcw-candidate-option', //!+ **select** candidate option class when mouse over
+				bodyNumID: 'dcw-candidate-num',
+				bodyStrID: 'dcw-candidate-str',										
+				top: 40,
+				left: 0
+			},
+			preview: {
+				//!+ **preview**
+				id: 'dcw-candidate-preview', //!+ **showPreview** if true, Wime will show Preview
+				enable: true,
+				top: 40,
+				left: 130	
+			}
+		},		
+		IME: {
+			//!+ **IME**
+			'CHT': {
+				'Phonetic': {
+					enable: true, //! + **enable** if true, IME will use
+					name: 'Phonetic', //! + **name** IME name
+					html: '',
+					hotkey: [17, 18, 55], //! + **hotkey** IME hotkey(ex:[55, 17, 18] = alt + ctrl + 7)
+					callback: function(){d.OpenWIME('Phonetic')},
+					mapping: {
+						'change': {
+							'ㄅ':'1', 'ㄆ':'Q', 'ㄇ':'A', 'ㄈ':'Z', 'ㄉ':'2', 'ㄊ':'W', 'ㄋ':'S', 'ㄌ':'X', 'ㄍ':'E', 'ㄎ':'D', 'ㄏ':'C', 
+							'ㄐ':'R', 'ㄑ':'F', 'ㄒ':'V', 'ㄓ':'5', 'ㄔ':'T', 'ㄕ':'G', 'ㄖ':'B', 'ㄗ':'Y', 'ㄘ':'H', 'ㄙ':'N', 
+							'ㄚ':'8', 'ㄛ':'I', 'ㄜ':'K', 'ㄝ':', ', 'ㄞ':'9', 'ㄟ':'O', 'ㄠ':'L', 'ㄡ':'.', 'ㄢ':'0', 'ㄣ':'P', 
+							'ㄤ':';', 'ㄥ':'/', 'ㄦ':'-', 
+							'ㄧ':'U', 'ㄨ':'J', 'ㄩ':'M', 
+							'ˉ':' ', 'ˊ':'6', 'ˇ':'3', 'ˋ':'4', '˙':'7'	
+						},
+						'ascii': {
+							// Consonant
+							49 : 'ㄅ', 81 : 'ㄆ', 65 : 'ㄇ', 90 : 'ㄈ', 50 : 'ㄉ', 87 : 'ㄊ', 83 : 'ㄋ', 88 : 'ㄌ', 69 : 'ㄍ', 68 : 'ㄎ',
+							67 : 'ㄏ', 82 : 'ㄐ', 70 : 'ㄑ', 86 : 'ㄒ', 53 : 'ㄓ', 84 : 'ㄔ', 71 : 'ㄕ', 66 : 'ㄖ', 89 : 'ㄗ', 72 : 'ㄘ',
+							78 : 'ㄙ',
+							// Vowel
+							56 : 'ㄚ', 73 : 'ㄛ', 75 : 'ㄜ', 188 : 'ㄝ', 57 : 'ㄞ', 79 : 'ㄟ', 76 : 'ㄠ', 190 : 'ㄡ', 48 : 'ㄢ', 80 : 'ㄣ',
+							186 : 'ㄤ', 191 : 'ㄥ', 189 : 'ㄦ',
+							// Either
+							85 : 'ㄧ', 74 : 'ㄨ', 77 : 'ㄩ',
+							// Tone
+							32 : 'ˉ', 54 : 'ˊ', 51 : 'ˇ', 52 : 'ˋ', 55 : '˙'	
+						},
+						'filter': null		
+					},
+					keyboard: {
+						enable: true,
+						id: 'phonetic'
+					}
+				},
+				'Changjie': {
+					enable: true, 
+					name: 'Changjie',
+					html: '',
+					hotkey: [17, 18, 56],
+					callback: function(){d.OpenWIME('Changjie')},
+					mapping: {
+						'change': {
+							'手':'Q', '日':'A', '田':'W', '尸':'S', '難':'X', '水':'E', '木':'D', 
+							'金':'C', '口':'R', '火':'F', '女':'V', '廿':'T', '土':'G', '月':'B', '卜':'Y', '竹':'H', 
+							'弓':'N', '山':'U', '十':'J', '一':'M', '戈':'I', 
+							'大':'K', '人':'O', '中':'L', '心':'P', 'ˉ':' '	
+						},
+						'ascii':  {
+							81 : '手', 65 : '日', 87 : '田', 83 : '尸', 88 : '難', 69 : '水', 68 : '木',
+							67 : '金', 82 : '口', 70 : '火', 86 : '女', 84 : '廿', 71 : '土', 66 : '月', 89 : '卜', 72 : '竹',
+							78 : '弓',
+							85 : '山', 74 : '十', 77 : '一',
+							73 : '戈', 75 : '大', 79 : '人', 76 : '中', 80 : '心',
+							32 : 'ˉ'
+						},
+						'filter': null		
+					},
+					keyboard: {
+						enable: true,
+						id: 'changjie'
+					}
+				}				
+			},
+			'JPN': {
+				'JIS': {
+					enable: true, //! + **enable** if true, IME will use
+					name: 'JIS', //! + **name** IME name
+					html: '',
+					hotkey: [17, 18, 55], //! + **hotkey** IME hotkey(ex:[55, 17, 18] = alt + ctrl + 7)
+					callback: function(){d.OpenWIME('JIS')},
+					mapping:{
+						'change': null,
+						'ascii':  d.mapping['ascii2keyboard'],
+						'filter': { // English → JIS
+							'shift+3':'ぁ','shift+4':'ぅ','shift+5':'ぇ','shift+6':'ぉ','shift+7':'ゃ',
+							'shift+8':'ゅ','shift+9':'ょ','shift+0':'を',
+							'shift+e':'ぃ','shift+z':'っ',
+							'shift+219':'゛','shift+221':'゜',
+							'1':'ぬ','2':'ふ','3':'あ','4':'う','5':'え','6':'お','7':'や','8':'ゆ','9':'よ','0':'わ',
+							'q':'た','w':'て','e':'い','r':'す','t':'か','y':'ん','u':'な','i':'に','o':'ら','p':'せ',
+							'a':'ち','s':'と','d':'し','f':'は','g':'き','h':'く','j':'ま','k':'の','l':'り',
+							'z':'つ','x':'さ','c':'そ','v':'ひ','b':'こ','n':'み','m':'も',
+							'か+゛':'が','き+゛':'ぎ','く+゛':'ぐ','け+゛':'げ','こ+゛':'ご',
+							'た+゛':'だ','ち+゛':'ぢ','つ+゛':'づ','て+゛':'で','と+゛':'ど',
+							'さ+゛':'ざ','し+゛':'じ','す+゛':'ず','せ+゛':'ぜ','そ+゛':'ぞ',		
+							'は+゛':'ば','ひ+゛':'び','ふ+゛':'ぶ','へ+゛':'べ','ほ+゛':'ぼ',
+							'は+゜':'ぱ','ひ+゜':'ぴ','ふ+゜':'ぷ','へ+゜':'ぺ','ほ+゜':'ぽ'
+						}
+					},
+					keyboard: {
+						enable: false,
+						id: 'jis'
+					}
+				},
+				'Kamei': {
+					enable: true, //! + **enable** if true, IME will use
+					name: 'Kamei', //! + **name** IME name
+					html: '',
+					hotkey: [17, 18, 56], //! + **hotkey** IME hotkey(ex:[55, 17, 18] = alt + ctrl + 7)
+					callback: function(){d.OpenWIME('Kamei')},
+					mapping:{
+						'change': null,
+						'ascii':  d.mapping['ascii2keyboard'],
+						'filter': { // English → Kamei
+							'.':'。',',':'、','-':'ー','~':'?','va':'ヴァ゛ぁ','vi':'ヴィ','vu':'ヴ','ve':'ヴェ','vo':'ヴォ',
+							'vv':'ッv','xx':'ッx','kk':'ッk','gg':'ッg','ss':'ッs','zz':'ッz','jj':'ッj',
+							'tt':'ッt','dd':'ッd','hh':'ッh','ff':'ッf','bb':'ッb','pp':'ッp','mm':'ッm',
+							'yy':'ッy','rr':'ッr','ww':'ッw','cc':'ッc',
+							'kwa':'クァ','kya':'キャ','kyi':'キィ','kyu':'キュ','kye':'キェ','kyo':'キョ','gya':'ギャ','gyi':'ギィ',
+							'gyu':'ギュ','gye':'ギェ','gyo':'ギョ','sya':'シャ','syi':'シィ','syu':'シュ','sye':'シェ','syo':'ショ','sha':'シャ','shi':'シ',
+							'shu':'シュ','she':'シェ','sho':'ショ','zya':'ジャ','zyi':'ジィ','zyu':'ジュ','zye':'ジェ','zyo':'ジョ','tya':'チャ','tyi':'チィ',		
+							'tyu':'チュ','tye':'チェ','tyo':'チョ','cha':'チャ','chi':'チ','chu':'チュ','che':'チェ','cho':'チョ','dya':'ヂャ','dyi':'ヂィ',
+							'dyu':'ヂュ','dye':'ヂェ','dyo':'ヂョ','tha':'テャ','thi':'ティ','thu':'テュ','the':'テェ','tho':'テョ','dha':'デャ',
+							'dhi':'ディ','dhu':'デュ','dhe':'デェ','dho':'デョ','nya':'ニャ','nyi':'ニィ','nyu':'ニュ','nye':'ニェ',
+							'nyo':'ニョ','jya':'ジャ','jyi':'ジィ','jyu':'ジィ','jye':'ジェ','jyo':'ジョ','hya':'ヒャ','hyi':'ヒィ','hyu':'ヒュ','hye':'ヒェ',
+							'hyo':'ヒョ','bya':'ビャ','byi':'ビィ','byu':'ビュ','bye':'ビェ','byo':'ビョ','pya':'ピャ','pyi':'ピィ','pyu':'ピュ',
+							'pye':'ピェ','pyo':'ピョ','fa':'ファ','fi':'フィ','fu':'フ','fe':'フェ','fo':'フォ','mya':'ミャ','myi':'ミィ','myu':'ミュ',
+							'mye':'ミェ','myo':'ミョ','rya':'リャ','ryi':'リィ','ryu':'リュ','rye':'リェ','ryo':'リョ','n\'':'ン￥','nn':'ン',
+							'lu':'ゥ','le':'ェ','lo':'ォ','ka':'カ','ki':'キ','ku':'ク','ke':'ケ','ko':'コ','ga':'ガ','gi':'ギ','gu':'グ',
+							'ge':'ゲ','go':'ゴ','sa':'サ','si':'シ','su':'ス','se':'セ','so':'ソ','za':'ザ','zi':'ジ','zu':'ズ','ze':'ゼ','zo':'ゾ',
+							'ja':'ジャ','ji':'ジ','ju':'ジュ','je':'ジェ','jo':'ジョ','ta':'タ','ti':'チ','tu':'ツ','tsu':'ツ','te':'テ','to':'ト',
+							'da':'ダ','di':'ヂ','du':'ヅ','de':'デ','do':'ド','xtu':'ッ','xtsu':'ｘツ','na':'ナ','ni':'ニ','nu':'ヌ','ne':'ネ',
+							'no':'ノ','ha':'ハ','hi':'ヒ','hu':'フ','fu':'フ','he':'ヘ','ho':'ホ','ba':'バ','bi':'ビ','bu':'ブ','be':'ベ',
+							'bo':'ボ','pa':'パ','pi':'ピ','pu':'プ','pe':'ペ','po':'ポ','ma':'マ','mi':'ミ','mu':'ム','me':'メ','mo':'モ',
+							'xya':'ャ','ya':'ヤ','xyu':'ュ','yu':'ユ','xyo':'ョ','yo':'ヨ','ra':'ラ','ri':'リ','ru':'ル','re':'レ','ro':'ロ',
+							'xwa':'ヮ','wa':'ワ','wi':'ウィ','we':'ウェ','wo':'ヲ','kn' : 'ネ','tt' :'ッ',
+							'a':'ア','i':'イ','u':'ウ','e':'エ','o':'オ','xa':'ァ','xi':'ィ','xu':'ゥ','xe':'ェ','xo':'ォ','la':'ァ','li':'ィ'
+						}
+					},
+					keyboard: {
+						enable: false,
+						id: 'kamei'
+					}
+				},
+				'Kana': {
+					enable: true, //! + **enable** if true, IME will use
+					name: 'Kana', //! + **name** IME name
+					html: '',
+					hotkey: [17, 18, 57], //! + **hotkey** IME hotkey(ex:[55, 17, 18] = alt + ctrl + 7)
+					callback: function(){d.OpenWIME('Kana')},
+					mapping:{
+						'change': null,
+						'ascii':  d.mapping['ascii2keyboard'],
+						'filter': { // English → Kana
+							'.' : '。',',':'、','-':'ー','~':'?','va':'う゛ぁ','vi':'う゛ぃ','vu':'う゛','ve':'う゛ぇ','vo':'う゛ぉ',
+							'vv':'っv','xx':'っx','kk':'っk','gg':'っg','ss':'っs','zz':'っz','jj':'っj',
+							'tt':'っt','dd':'っd','hh':'っh','ff':'っf','bb':'っb','pp':'っp','mm':'っm',
+							'yy':'っy','rr':'っr','ww':'っw','cc':'っc',
+							'kwa' : 'くぁ','kya':'きゃ','kyi':'きぃ','kyu':'きゅ','kye':'きぇ','kyo':'きょ','gya':'ぎゃ','gyi':'ぎぃ',
+							'gyu':'ぎゅ','gye':'ぎぇ','gyo':'ぎょ','sya':'しゃ','syi':'しぃ','syu':'しゅ','sye':'しぇ','syo':'しょ','sha':'しゃ','shi':'し',
+							'shu':'しゅ','she':'しぇ','sho':'しょ','zya':'じゃ','zyi':'じぃ','zyu':'じゅ','zye':'じぇ','zyo':'じょ','tya':'ちゃ','tyi':'ちぃ',
+							'tyu':'ちゅ','tye':'ちぇ','tyo':'ちょ','cha':'ちゃ','chi':'ち','chu':'ちゅ','che':'ちぇ','cho':'ちょ','dya':'ぢゃ','dyi':'ぢぃ',
+							'dyu':'ぢゅ','dye':'ぢぇ','dyo':'ぢょ','tha':'てゃ','thi':'てぃ','thu':'てゅ','the':'てぇ','tho':'てょ','dha':'でゃ',
+							'dhi':'でぃ','dhu':'でゅ','dhe':'でぇ','dho':'でょ','nya':'にゃ','nyi':'にぃ','nyu':'にゅ','nye':'にぇ',
+							'nyo':'にょ','jya':'じゃ','jyi':'じ','jyu':'じゅ','jye':'じぇ','jyo':'じょ','hya':'ひゃ','hyi':'ひぃ','hyu':'ひゅ','hye':'ひぇ',
+							'hyo':'ひょ','bya':'びゃ','byi':'びぃ','byu':'びゅ','bye':'びぇ','byo':'びょ','pya':'ぴゃ','pyi':'ぴぃ','pyu':'ぴゅ',
+							'pye':'ぴぇ','pyo':'ぴょ','fa':'ふぁ','fi':'ふぃ','fu':'ふ','fe':'ふぇ','fo':'ふぉ','mya':'みゃ','myi':'みぃ','myu':'みゅ',
+							'mye':'みぇ','myo':'みょ','rya':'りゃ','ryi':'りぃ','ryu':'りゅ','rye':'りぇ','ryo':'りょ','n\'':'ん','nn':'ん',
+							'lu':'ぅ','le':'ぇ','lo':'ぉ','ka':'か','ki':'き','ku':'く','ke':'け','ko':'こ','ga':'が','gi':'ぎ','gu':'ぐ',
+							'ge':'げ','go':'ご','sa':'さ','si':'し','su':'す','se':'せ','so':'そ','za':'ざ','zi':'じ','zu':'ず','ze':'ぜ','zo':'ぞ',
+							'ja':'じゃ','ji':'じ','ju':'じゅ','je':'じぇ','jo':'じょ','ta':'た','ti':'ち','tu':'つ','tsu':'つ','te':'て','to':'と',
+							'da':'だ','di':'ぢ','du':'づ','de':'で','do':'ど','xtu':'っ','xtsu':'っ','na':'な','ni':'に','nu':'ぬ','ne':'ね',
+							'no':'の','ha':'は','hi':'ひ','hu':'ふ','fu':'ふ','he':'へ','ho':'ほ','ba':'ば','bi':'び','bu':'ぶ','be':'べ',
+							'bo':'ぼ','pa':'ぱ','pi':'ぴ','pu':'ぷ','pe':'ぺ','po':'ぽ','ma':'ま','mi':'み','mu':'む','me':'め','mo':'も',
+							'xya':'ゃ','ya':'や','xyu':'ゅ','yu':'ゆ','xyo':'ょ','yo':'よ','ra':'ら','ri':'り','ru':'る','re':'れ','ro':'ろ',
+							'xwa':'ゎ','wa':'わ','wi':'うぃ','we':'うぇ','wo':'を', 'kn' : 'ね',
+							'a':'あ','i':'い','u':'う','e':'え','o':'お','xa':'ぁ','xi':'ぃ','xu':'ぅ','xe':'ぇ','xo':'ぉ','la':'ぁ','li':'ぃ'
+						}
+					},
+					keyboard: {
+						enable: false,
+						id: 'kana'
+					}
+				}
+			}
+		}
+	});	
+	//!### Global
+	d.extend(true, d.glob, {
+		code:{
+			'wime': 1
+		},
+		target: {
+			 //!+ **target**
+			elem: null, //!+ **obj** target object
+			ind: 0, //!+ **ind** target object cusor index
+			ime: null  //!+ **IME** now Ime
+		},
+		queryState: false, //!+ **queryState** it's true when ime Gaiji finish
+		pageNum: 1,	//!+ **pageNum** **targetObj** now candidate page
+		optionID: 1, //!+ **optionID** now option ID
+		spell: [], //!+ **spell** Ime spell space
+		hotkey: [], //!+ **hotkey** hotkey spell space
+		keyboard: {
+			mandatory: null
+		}
+	});
+	var trigger=d.trigger;
+	var wime=d.wime;
+	var candidate=d.candidate;
+	var keyboard=d.keyboard;
+})(dynaGWS);

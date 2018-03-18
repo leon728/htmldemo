@@ -1,0 +1,177 @@
+.mstheme
+{
+    top-bar-button: url(back1.gif);
+    version: 1.0;
+    navbutton-background-color: rgb(255,255,255)
+}
+.mstheme-topbar-font
+{
+    COLOR: #663300;
+    FONT-FAMILY: Arial, Helvetica
+}
+BODY
+{
+    /* BACKGROUND-IMAGE: url(../../images/misc/background.gif); */
+    FONT-FAMILY:  細明體,標楷體,Arial, Helvetica;
+	COLOR: blue;
+}
+.TableDeclare
+{
+    BACKGROUND-COLOR: white;
+    FONT-SIZE: 10pt;
+    FONT-FAMILY:  細明體,標楷體;
+}
+
+TABLE
+{
+    FONT-FAMILY:  細明體,標楷體,Arial, Helvetica;
+    FONT-SIZE: 10pt;    
+	COLOR: blue;
+}
+TR
+{
+    FONT-FAMILY:  細明體,標楷體,Arial, Helvetica;
+    FONT-SIZE: 10pt;    
+	COLOR: black;
+}
+TD
+{
+    FONT-FAMILY:  細明體,標楷體,Arial, Helvetica;
+    FONT-SIZE: 10pt;    
+	COLOR: black;
+}
+H1
+{
+    FONT-FAMILY: 細明體,標楷體, Trebuchet MS, Arial, Helvetica
+}
+H2
+{
+    FONT-FAMILY:  細明體,標楷體,Trebuchet MS, Arial, Helvetica
+}
+H3
+{
+    FONT-FAMILY:  細明體,標楷體,Trebuchet MS, Arial, Helvetica
+}
+H4
+{
+    FONT-FAMILY:  細明體,標楷體,Trebuchet MS, Arial, Helvetica
+}
+H5
+{
+    FONT-FAMILY:  細明體,標楷體,Trebuchet MS, Arial, Helvetica
+}
+H6
+{
+    FONT-FAMILY:  細明體,標楷體,Trebuchet MS, Arial, Helvetica
+}
+.Key
+{
+    FONT-SIZE: 10pt;
+    COLOR: blue;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: #F7EED9
+}
+.Data
+{
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: white
+}
+.queryHead
+{
+    /*FONT-WEIGHT: bold;
+ 	FONT-SIZE: 12pt;
+    COLOR: #99FFFF;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: #663300 */
+
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: rgb(206,228,245);
+                      
+}
+.queryBody
+{
+    FONT-SIZE: 10pt;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: #ECF0F0;
+}
+.Common
+{
+    COLOR: blue;
+    FONT-FAMILY:  細明體,標楷體;
+}
+.RadioData
+{
+    BACKGROUND-COLOR: #fafad2
+}
+.TableHeading
+{
+    /* FONT-WEIGHT: bold; */
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: #C2D1E7;
+    cellpadding:"0";
+    cellspacing:"3";
+    border-left:solid #999999 1px;
+    border-top:solid #999999 1px;
+    border-right:solid #999999 1px;
+    border-bottom:solid #999999 1px;
+}
+.TabPageContentTable
+{
+    /* FONT-WEIGHT: bold; */
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    FONT-FAMILY:  細明體,標楷體;
+    BACKGROUND-COLOR: #ECF0F0;   
+    cellpadding:"0";
+    cellspacing:"3";
+    border-left:solid #999999 1px;
+    border-top:solid #999999 1px;
+    border-right:solid #999999 1px;
+    border-bottom:solid #999999 1px;
+}
+
+TBODY
+{
+    /* FONT-WEIGHT: bold; */
+    FONT-SIZE: 12pt;
+    COLOR: black;
+    FONT-FAMILY:  細明體,標楷體;
+   /* BACKGROUND-COLOR: #ECF0F0;*/
+    cellpadding:"0";
+    cellspacing:"3";
+    border-left:solid #999999 1px;
+    border-top:solid #999999 1px;
+    border-right:solid #999999 1px;
+    border-bottom:solid #999999 1px;
+}
+
+.PolicyLimit {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	width: 100%;
+	background-color: #CCCCFF;
+}
+.LABEL_POLICY
+{
+	background-color: #FFFFFF;
+	border: 1px solid #3366FF;
+	font-size: 12px;
+	width:auto;
+	vertical-align: middle;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 2px;
+	margin-left: 2px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 2px;
+	padding-left: 2px;
+	cursor: text;
+	text-align: left;
+	letter-spacing: 0px;
+}

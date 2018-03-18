@@ -1,0 +1,312 @@
+@charset "UTF-8";
+
+/* --Global CSS Style�A�Ω�CSIS�����css---------------------------------------------------------------------------- */
+body { background:#fff; margin:0; padding:0; text-align:left;}
+#header {margin:0; padding:0; height:113px; background:#fff url(../../images/template/LeftTopBgR.png) repeat-x 0 0; overflow:hidden; position:relative;}
+#banner {margin:0; padding:0; border-bottom:2px #006fbe solid; height:128px; width: 100%; background:#f3e1ed url(../../images/picture/main-banner01.jpg) no-repeat left top;overflow:hidden;}/*保戶專區*/
+#banner2 {margin:0; padding:0; border-bottom:2px #006fbe solid; height:128px; background:#176aac url(../../images/picture/main-banner02.jpg) no-repeat left top;overflow:hidden;}/*全球精英專區*/
+#banner3 {margin:0; padding:0; border-bottom:2px #006fbe solid; height:128px; background:#176aac url(../../images/picture/main-banner03.jpg) no-repeat left top;overflow:hidden;}/*內勤專區*/
+#banner4 {margin:0; padding:0; border-bottom:2px #006fbe solid; height:128px; background:#176aac url(../../images/picture/main-banner04.jpg) no-repeat left top;overflow:hidden;}/*經代專區*/
+#banner5 {margin:0; padding:0; border-bottom:2px #006fbe solid; height:128px; background:#176aac url(../../images/picture/main-banner05.jpg) no-repeat left top;overflow:hidden;}/*保代銀行保險專區*/
+
+
+#getTest {
+	         position:absolute;
+             bottom:50px; 
+             right:300px; 
+             color: #0070BD;
+             font-size: 18px;
+             font-family:Arial, Helvetica, sans-serif;
+             font-weight: bold;
+             width: 200px;
+             }
+#getTest2 {
+	         position:absolute;
+             bottom:50px; 
+             left:300px; 
+             color: #0070BD;
+             font-size: 18px;
+             font-family: Arial, Helvetica, sans-serif;
+             font-weight: bold;
+             width: 200px;
+             }             
+
+/*--全球Logo--*/
+/*#TGL-logo{ background:url(../../images/template/Transglobe-Logo.png) no-repeat 0 0; width:127px; height:39px; margin-left:29px; margin-top:17px; text-indent:-9999px; cursor:pointer;}
+#TGL-logo{ background:url(../../images/template/Transglobe-Logo.png) no-repeat 0 -5px; width:350px; height:50px; margin-left:29px; margin-top:10px; text-indent:-9999px; cursor:pointer;}*/
+#TGL-logo{ background:url(../../images/template/Transglobe-Logo.png) no-repeat 0 0; width:210px; height:40px; margin-left:28px; margin-top:20px; text-indent:-9999px; cursor:pointer;}
+
+/*--top control start --*/
+#top-control{position: absolute; right:3px; top:20px;}
+#top-control a{ display: inline-block; float:left; background:url(../../images/template/HeaderSprite0306.png) no-repeat; height:40px; overflow:hidden ;}
+#top-control a.quick-link01 {background-position:0 -80px;width:40px; padding:0; margin:0;}
+#top-control a.quick-link02 {background-position:0 -160px;width:40px; padding:0; margin:0;}
+#top-control a.quick-link03 {background-position:0 -240px;width:40px; padding:0; margin:0;}
+#top-control a.quick-link04 {background-position:0 -320px;width:40px; padding:0; margin:0;}
+#top-control a.quick-link05 {background-position:0 -400px;width:40px; padding:0; margin:0;}
+/* #top-control a.quick-link06{background-position:0 -0px;width:40px; padding:0; margin:0;} 原國華網站 */
+#top-control a.quick-link07 {background-position:0 -0px; width:40px;}	/*網路投保*/
+
+#top-control a.quick-link01:hover {background-position:0 -120px;}
+#top-control a.quick-link02:hover {background-position:0 -200px;}
+#top-control a.quick-link03:hover {background-position:0 -280px;}
+#top-control a.quick-link04:hover {background-position:0 -360px;}
+#top-control a.quick-link05:hover {background-position:0 -440px;}
+/* #top-control a.quick-link06:hover {background-position:0 -40px;} 原國華網站 */
+#top-control a.quick-link07:hover {background-position:0 -40px;} /*網路投保*/
+
+#top-control a span {visibility:hidden;width:0;height:0;display:block;}
+/*--top control end --*/
+/*---global-menu---*/
+.global-menu { background:#dddddd url(../../images/template/global-nav-bg.png) repeat-x 0 0; margin:15px 0 0 0;}
+
+.global-menu ul {padding:0; margin:0; list-style:none;}
+.global-menu ul li { display:inline-block; float:left; height:41px; min-width:154px; line-height:41px; text-align:center;  padding:0; margin:0;} 
+.global-menu ul:after{ clear:left;}
+.global-menu ul li a {display: block; height:41px; background:url(../../images/template/global-nav-btn.png) no-repeat; text-indent:-9999em;padding:0; margin:0;}
+
+.global-menu ul li a.btn01 { width:164px; background-position:0 0;}
+.global-menu ul li a.btn01:hover { background-position:0 -43px;}
+
+.global-menu ul li a.btn02 { width:153px; background-position:-164px 0;}
+.global-menu ul li a.btn02:hover { background-position:-164px -43px;}
+
+.global-menu ul li a.btn03 { width:154px; background-position:-317px 0;}
+.global-menu ul li a.btn03:hover {background-position:-317px -43px;}
+
+.global-menu ul li a.btn04 { width:153px; background-position:-471px 0;}
+.global-menu ul li a.btn04:hover {background-position:-471px -43px;}
+
+.global-menu ul li a.btn05 { width:154px; background-position:-624px 0;}
+.global-menu ul li a.btn05:hover {background-position:-624px -43px;}
+
+.global-menu ul li a.btn06 {width:160px; background-position:-778px 0;}
+.global-menu ul li a.btn06:hover { background-position:-778px -43px;}
+table.LargerText th{ color:#0070BD; background:#E7E7E7; padding-right:1.5em; border-bottom:#fff 1px solid;}
+table.LargerText td{ font-size:120%; border:none!important; height:3em;}
+table.LargerText td input{ /*width:80%;*/ padding:0.2em 0.5em; margin:0 0.em;}
+.divWidth{width:500px;}
+#divMain  { border:none; padding:0; margin:0 0 0 20px; }
+#divMain table { border-collapse:collapse; border:none!important;}
+#divMain table tr {}
+#divMain table td { padding:5px 10px!important;; margin:0;}
+.TabPageContentTable thead td.TableHeading, thead.queryHead td ,.TabPageContentTable tr.TableHeading td{ font-size:12px; color:#0070bd; font-weight:bold; background:#E7E7E7; font-family:Arial, Helvetica, sans-serif; }
+.TabPageContentTable thead th{ font-size:12px; color:#0070bd; text-align:center; border:1px #666 solid; font-weight:bold; background:#E7E7E7; padding:0.5em; margin:0; font-family:Arial, Helvetica, sans-serif; }
+.TabPageContentTable .col01{ width:auto; text-align:center;}
+.TabPageContentTable .col02{width:auto; text-align:center;}
+.TabPageContentTable .col03{width:auto; text-align:center;}
+.TabPageContentTable .col04{width:auto; text-align:center;}
+.TabPageContentTable .col05{width:auto; text-align:center;}
+.TabPageContentTable .col06{width:auto; text-align:center;}
+.TabPageContentTable .col07{width:auto; text-align:center;}
+.TabPageContentTable .col08{width:auto; text-align:center;}
+.TabPageContentTable .col09{width:auto; text-align:center;}
+.TabPageContentTable .col10{width:auto; text-align:center;}
+.TabPageContentTable .col11{width:auto; text-align:center;}
+.TabPageContentTable .col12{width:auto; text-align:center;}
+.TabPageContentTable .col13{width:auto; text-align:center;}
+.TabPageContentTable .col14{width:auto; text-align:center;}
+.TabPageContentTable .col15{width:auto; text-align:center;}
+.TabPageContentTable .col16{width:auto; text-align:center;}
+/**/
+tr#trBasicInfo td.TableHeading, tr#trCollection td.TableHeading, tr#trAgent td.TableHeading, tr#trInvestment td.TableHeading, tr#trCoverage td.TableHeading, tr#trFinancial td.TableHeading { font-size:12px; color:#0070bd; font-weight:bold; font-family:Arial, Helvetica, sans-serif;}
+
+table#tblMain{border:1px solid #e6e5e5!important; width:95%; min-width:500px; background:#CEE4F5;box-shadow:1px 1px 3px #888; -moz-box-shadow:1px 1px 3px #888; -webkit-box-shadow:1px 1px 3px #888; /* margin:0 auto; */}
+table#tblMain td{border:1px solid #999;}
+table#tblMain b {font-size: 12px; font-weight:bold; line-height:1.5em; }
+table#tblMain h4{ margin:2em 0; padding:0;}
+table#tblMain ol li{ font-size:12px; line-height:2em!important; font-family:Arial, Helvetica, sans-serif; font-weight:normal;}
+
+table#tblMainW{border:1px solid #e6e5e5!important; width:95%; min-width:500px; background:#fff;}
+table#tblMainW td{border:1px solid #999;}
+table#tblMainW b {font-size: 12px; font-weight:bold; line-height:1.5em; }
+table#tblMainW h4{ margin:2em 0; padding:0;}
+table#tblMainW ol li{ font-size:12px; line-height:2em!important; font-family:Arial, Helvetica, sans-serif; font-weight:normal;}
+
+.LABEL_POLICY {font-size: 12px;width:auto; line-height:1.5em; margin:0 2px 0 2px; padding:0 2px 0 2px;cursor: text;text-align: left;}
+.TabPageContentTable tbody tr { border-bottom:1px #e6e5e5 solid;}
+.TabPageContentTable { font-size:12px; /*color:#666;*/color:#000; font-family:Arial, Helvetica, sans-serif!important;background:#fff; border:1px solid #e6e5e5!important; margin:5px 0; width:100%!important;}
+/* .TabPageContentTable tbody td{  text-align:left; }*/
+/*.TabPageContentTable tbody tr:nth-child(even) { background:#ededed;} */
+tr.TabPageContentTableTR td{ border-bottom:1px #ccc solid!important; }
+/*navigator*/
+#navigator ul{ padding:0; margin:0 0 0 20px; width:182px;}
+#navigator ul li{ padding:0; margin:0; list-style:none; height:28px; line-height:28px; background:url(../images/template/LeftNavigatorBg.png) no-repeat center bottom; /*color:#666666;*/ color:#000;}
+#navigator ul li.current a{color:#0070bd; font-weight:bold;}
+#navigator ul li a{/*color:#666666;*/ color:#000; line-height:28px; padding:0 0 0 40px; margin:0; text-decoration:none;}
+#navigator ul li a:hover{color:#0070bd}
+
+/*#navigator .quick-accessboxBg{width:183px; height:151px; padding:0; margin:0; }
+*/#navigator h3.quick-accessbox { background:none; text-indent:-9999em; height:0;}
+#navigator ul.quick-accessbox {background:url(../../images/template/LeftNavigatorSprite.png) no-repeat 0 0;  width:97px; padding:14px 0 0 85px; margin:0 0 0 20px;  height:137px;}
+#navigator ul.quick-accessbox li{ background: url(../../images/template/LeftNavigatorSprite.png) no-repeat 0 -250px; width:80px; height:20px; line-height:19px; border-bottom:1px #d6d6d6 solid; padding:0; margin:0;}
+#navigator ul.quick-accessbox li a{ padding:0 0 0 10px; margin:0;line-height:20px; display:inline; font-size:12px; height:auto;}
+#navigator ul.quick-accessbox li a:hover{color:#0070bd}
+
+ #navigator h3.ads-banner { background: url(../../images/template/LeftNavigatorSprite.png) no-repeat 0 -160px; height:58px; padding:0; margin:6px 0 0 20px; text-indent:-9999px;}
+
+.space-here { height:5em;}
+
+
+/* --Global CSS Style�A�Ω�CSIS�����css---------------------------------------------------------------------------- */
+
+
+
+#wrapper{background:#fff; margin:0 auto; box-shadow: 5px 3px 5px #888; -moz-box-shadow: 5px 3px 5px #888; -webkit-box-shadow: 5px 3px 5px #888; padding:0 5px;}
+#content { position:relative;}
+#global-path-container { position:absolute; right:0; top:10px;}
+	/*global-path-------------------------------------------------------------------------------------------*/
+	#global-path {padding:0; margin:0;color:#898989; text-align:right; padding-right:25px; height:35px; display:block; width:50%; position:absolute; right:0; top:7px;}
+	#global-path a{ color:#898989; text-decoration:none; line-height:35px;}
+	#global-path a:hover { text-decoration:underline;}
+	#global-path a.current { color:#000000; text-decoration:none;}
+	/*------------------------------------------------------------------------------------Path-------*/
+
+/* --Global CSS Style�A�Ω�������css--------------------------------------------------------------------------- */
+.clear { clear:both;}
+.invisibile-title { visibility:hidden; height:0; line-height:none; margin:0; padding:0;}
+
+/*---header---*/
+#header h1{ background:url(../images/template/HeaderSprite.png) no-repeat -10px -10px; width:117px; height:26px; line-height:26px; margin:31px 0 0 36px; padding:0;}
+#header h1 a{ line-height:26px; font-size:0.8em; padding:0; margin:0; visibility:hidden; } 
+#top-search{position: absolute; right:270px; top:5px;}
+#top-search table{border:#e8e8e8 1px solid; padding:0; border-collapse:collapse; width:auto;}
+#top-search table a{font-size:12px; text-decoration:none; color:#313131; height:35px; line-height:35px; padding:0 5px; }
+#top-search table a:hover{text-decoration:underline;}
+
+.formLabel{font-size:12px; line-height:21px;height:21px; padding-left:13px; }
+#searchwrapper {display:inline-block;
+/*width:158px; */
+width:158px;
+height:21px;
+background-image: url(../images/template/searchbox_white.jpg);
+background-repeat:no-repeat;
+padding:0;
+margin:0px;
+position:relative; 
+}
+ 
+#searchwrapper form { display:inline ; }
+#searchwrapper form input[type="text"] { margin:0!important; background:none!important; border:none!important;}
+.searchbox {
+border:0px;
+background-color:transparent; 
+position:absolute;
+top:1px;
+left:1px;
+width:140px;
+height:20px; line-height:20px;
+}
+ 
+.searchbox_submit {
+border:0px; /*important*/
+background-color:transparent; /*important*/
+position:absolute; /*important*/
+top:1px;
+left:141px;
+width:17px;
+height:20px;
+}
+
+
+
+
+/*---main-banner---*/
+
+#main-banner figure{ width:100%; height:128px; border-bottom:#0070bd 2px solid; overflow:hidden;}
+#main-banner figcaption{visibility:hidden; height:0; line-height:none; margin:0; padding:0;}
+#main-banner figure img{min-width:100%;height:auto;}
+
+/*--footer--*/
+
+/*--footer-top-block--*/
+#footer-top-block{ background:#ebebeb; /*color:#666666;*/ color:#000; padding:7px 0 7px 33px;}
+#footer-top-block a{/*color:#666666;*/ color:#000;line-height:23px; font-size:12px; padding:0px  13px 0 0; text-decoration:none;}
+#footer-top-block a:hover{ text-decoration:underline; }
+#footer-top-block span{padding:0 15px 0 0;}
+
+
+
+/*--footer-botton-block--*/
+#footer-botton-block{ background:#dfedf7; padding-top:22px; border-top:#0070bd 3px solid;}
+.footer-segment-large{ margin:0 40px 40px 30px; border-right:1px dashed #92a0aa;}
+
+/*---
+#footer-botton-block{ background:#dfedf7;display:box; display:-moz-box;display:-o-box;display:-webkit-box; -moz-box-orient:horizontal; -webkit-box-orient:horizontal; box-orient:horizontal; width:100%; padding-top:22px; border-top:#0070bd 3px solid;}
+.footer-segment-large{ -moz-box-flex:1;-webkit-box-flex:1;-o-box-flex:1;box-flex:1;  margin:0 40px 40px 30px; border-right:1px dashed #92a0aa;}
+
+css3 style--*/
+.footer-segment-large h3{ display:inline-block; padding:0; margin:0 0 0 20px;font-size:12px; background:url(../images/template/HeaderSprite.png) no-repeat -10px -210px; width:110px; height:34px; overflow:hidden; text-indent:-9999em;}
+.footer-segment-large address{ font-size:12px; font-style:normal; color:#666; margin:0 0 0 20px!important; padding:0!important;}
+.footer-segment-large p{ font-size:12px; font-style:normal; color:#666; line-height:24px; margin:0 0 0 20px!important; padding:0;}
+a.footer-map { display:inline-block; width:55px; height:15px; padding:0; margin:7px 0 12px 20px;  background:url(../images/template/HeaderSprite.png) no-repeat -150px -210px; cursor:pointer;}
+
+.footer-segment{-moz-box-flex:1;-webkit-box-flex:1;-o-box-flex:1;box-flex:1;margin-bottom:40px;}
+.footer-segment h3{ display:inline;color:#000; font-size:12px; font-weight:bold; margin:0; padding:0;} 
+.footer-segment ul{ padding:0; margin:0; display:inline;}
+.footer-segment ul li {padding:0; margin:0; list-style:none;}
+.footer-segment ul li a{ color:#666; text-decoration:none; font-size:12px; line-height:22px;}
+.footer-segment ul li a:hover{text-decoration: underline;}
+
+/*main*/
+
+
+ 
+ 
+ /*Main*/
+ 
+#main-content {min-width:652px; width:99%; margin:0; padding:0;}
+
+ /*�z��5���n�J����*/
+#LoginLog-table{margin:0 0 50px 0;}
+#LoginLog-table p{ background:url(../images/icon/arrowIconSprite.png) no-repeat 0 -50px; line-height:20px; height:20px; padding:0 0 0 27px; margin:20px 0 14px 15px; font-weight:bold;} 
+#LoginLog-table h3{ font-size:12px; color:#0070bd; font-weight:bold;  background:#cee4f5; border:1px #c3def2 solid; line-height:34px; height:34px; margin:0 0 15px 25px; padding:0 0 0 21px;;border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; display:block;} 
+
+#LoginLog-table ul{ padding:0;margin:0 0 15px 25px;} 
+#LoginLog-table ul li{padding:0; margin:0; list-style:none; border-bottom:1px #e6e5e5 solid; width:100%; display:table;} 
+/*#LoginLog-table ul li:nth-child(even){ background:#ededed;}*/
+#LoginLog-table ul li span{ color:#ccc; font-size:12px; line-height:30px;/* color:#666666;*/  color:#000; display:table-cell;} 
+
+#LoginLog-table ul li span:first-child{text-align:right;width:10%; padding-right:20px;} 
+#LoginLog-table ul li span:last-child{ text-align:left; width:15%;} 
+
+  #Hint{ min-height:96px; margin:0 0 50px 25px; padding:0; background:url(../images/template/HintBg.png) repeat-x left top; border:1px #c9c9c9 solid; border-radius:15px; -moz-border-radius:15px; -webkit-border-radius:15px;  } /*�K�ߴ���*/
+  #Hint h3{ display:inline-block; width:73px; height:67px; margin:21px 0 0 36px; background:url(../images/template/TitleIconSprite.png) no-repeat 0 0; text-indent:-9999em; float:left;}
+  #Hint ul { display:inline-block;margin:21px 0 0 10px; float:left; }
+  #Hint ul li{/* color:#666666;*/ color:#000; line-height:25px; list-style:none; padding-left:10px; background:url(../images/icon/arrowIconSprite.png) no-repeat 0 0;}
+
+/*���q���ʰT��--�O�ᬡ�ʰT��---*/  
+.activity-info{ margin: 0 0 0 25px;}
+.activity-info h3{background:url(../images/icon/arrowIconSprite.png) no-repeat 0 -80px; line-height:17px; font-size:15px; font-weight:bold; color:#0070bd; padding:0 0 0 20px;}
+.activity-info-box{ border:1px #ccc solid; display:block; float:left; width:40%; min-width:249px; height:126px; margin:10px 30px 25px 0; padding:14px;}
+.activity-info-box h4{ color:#000; font-weight:bold; font-size:12px; line-height:35px;padding:0; margin:0;}
+.activity-info-box p{ /*color:#666666;*/ color:#000; padding:0; margin:0; line-height:18px;}
+.activity-info-box a{ color:#3593d3;line-height:18px; text-decoration:none; word-break:keep-all;}
+.activity-info-box a:hover{text-decoration: underline;}
+.activity-info-box img { float:right; margin:0 0 0 20px;}
+.activity-info-box img:after{ clear:right; height:0; content:"";}
+table#tabReadme{ border:none; background:#fff;}
+table#tabReadme tbody tr, table#tabReadme tbody td{ border:none;}
+.helloName{ font-size:15px!important; font-weight:bold!important; color:#222!important; line-height:25px; height:25px; text-align:left; width:80%;}
+.helloName span{ padding:0 5px;}
+#thisTitle{ font-size:16px; color:#333; font-weight:bold; line-height:20px;}
+input.eServiceButton, #tabReadme input[type="button"]{ margin-right:36px; color:#0070bd; height:28px; line-height:28px; width:85px;border:#a3a3a3 1px solid; border-radius:5px;}
+input.eServiceButton:hover, #tabReadme input[type="button"]:hover{ color:#333;border:#333 1px solid; box-shadow:1px 1px 3px #888; -moz-box-shadow:1px 1px 3px #888; -webkit-box-shadow:1px 1px 3px #888;}
+#navigator ul.quick-accessbox li.blank{ background:none;}
+/* 2012 04 20 add by Sean*/
+.queryBody1 th{ word-break:keep-all; text-align:left; padding-left:30px;}
+.queryBody1 td{ border:none!important;}
+.queryBody1 td input{ border:1px #ccc solid; padding:0.2em 0.5em; margin:0.5em; width:12em;}
+.queryBody1 td select { border:1px #ccc solid; padding:0.2em 0.5em; margin:0.5em;}
+#navigator a.ads-banner-link { height:auto!important;}
+.login-name{/*position:absolute; top:20px; right:200px; */color:#0070BD; font-size:12px; font-family:Arial, Helvetica, sans-serif; font-weight:bold; width:auto; text-align:left; padding-left:10px;}
+.logon-Name2{ width:150px; position:absolute; top:20px; left:40%; font-family:Arial, Helvetica, sans-serif; font-weight:bold;color:#0070bd}
+.login-Name3{position:absolute; top:20px; right:200px; color:#0070BD; font-size:12px; font-family:Arial, Helvetica, sans-serif; font-weight:bold; width:250px; text-align:left; padding-left:10px;}
+.TitleL5{ color:#0000FF!important; font-size:16px!important; font-family:Arial, Helvetica, sans-serif!important;}
+.note-Text{font-size: 12px; line-height: 16px; color: #666666; background-color:white;font-family:Arial, Helvetica, sans-serif!important;}
+.red-text{ color:#FF0000} 
+table.no-borderTD{ border:none!important;}
+table.no-borderTD td{ border:none!important;}
+#divMain table.TabPageContentTable tr.noPadding td{ padding:0!important; height:2em!important;}
+table#tblMain table.PIfoot{border-collapse:collapse; padding:0!important; margin:0!important; border:none!important;}
+table#tblMain table.PIfoot td{ padding:0!important; margin:0!important; border:none!important; font:Arial, Helvetica, sans-serif!important; font-size:11px;}
